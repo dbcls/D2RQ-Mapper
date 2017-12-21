@@ -1,0 +1,39 @@
+<div id="contents">
+  <div class="start">
+    <div class="start-main">
+      <h1><span class="title-in"><%= image_tag 'logo.svg', alt: "D2RQ Mapper" %></span></h1>
+      <div class="btn-set">
+	<ul>
+	  <li><%= link_to button_tag('Sign in', type: 'button', class: 'btn btn-default'), new_user_session_path %></li>
+	  <li><%= link_to(user_twitter_omniauth_authorize_path, style:"color:white;") do %><button type="button" class="btn btn-twitter">Sign in with <i class="fa fa-twitter"></i></button><% end %></li>
+	  <li><%= link_to(user_facebook_omniauth_authorize_path, style:"color:white;") do %><button type="button" class="btn btn-facebook">Sign in with <i class="fa fa-facebook"></i></button><% end %></li>
+	</ul>
+	or
+	<%= link_to button_tag("Create account", type: "button", class: "btn btn-primary btn-block"), new_user_registration_path %>
+      </div>
+    </div>
+  </div><!-- /start -->
+
+  <div class="start-text">
+    <h2 class="text-primary text-center">Welcome to D2RQ Mapper</h2>
+
+    <p>To fully utilize data stored in the RDB (relational database) in the Semantic Web context while keeping the database content up-to-date, it is ideal to have a middleware to map RDB datasets to those of RDF (Resource Description Framework) graph and to provide an interface where user can access to the RDB using SPARQL (SPARQL Protocol and RDF Query Language).</p>
+
+    <p>D2RQ Mapper is a web application that assists generating configuration files for the D2RQ (<a href="http://d2rq.org" target="_blank">http://d2rq.org</a>) platform. D2RQ provides a SPARQL endpoint that connects to a designated RDB SQL interface and is also used to dump RDB datasets in RDF.</p>
+
+    <p>D2RQ Mapper is available on this web site (<a href="http://d2rq.dbcls.jp/">http://d2rq.dbcls.jp/</a>) for externally accessible RDBs and the Docker version (<a href="https://hub.docker.com/r/d2rqmapper/d2rq-mapper/" target="_blank">https://hub.docker.com/r/d2rqmapper/d2rq-mapper/</a>) is available for locally accessible RDBs.</p>
+
+    <p>With the D2RQ Mapper, user can easily</p>
+    <ul>
+      <li>create/edit a mapping file which connects RDB database(s) and RDF</li>
+      <li>join databases and tables if necessary</li>
+      <li>configure mappings from RDB table columns and values in cells to RDF triples</li>
+      <li>query the RDB databases with SPARQL on-the-fly, and</li>
+      <li>dump a resulting RDF dataset</li>
+    </ul>
+    <p>D2RQ Mapper generates both D2RQ and R2RML mapping files for download.</p>
+    <% if notice %>
+        <!-- <%= notice %> -->
+    <% end %>
+  </div>
+</div><!-- /contents -->

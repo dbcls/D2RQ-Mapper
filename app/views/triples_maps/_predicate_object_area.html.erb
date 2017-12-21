@@ -1,0 +1,51 @@
+<%# == Predicate  == %>
+<% if defined?(bnode) %>
+<% predicates = bnode_property[:predicates] %>
+<% else %>
+<% predicates = property_bridge_property_setting && property_bridge_property_setting[:predicates] ? property_bridge_property_setting[:predicates] : [] %>
+<% end %>
+<div class="panel panel-triple">
+  <div class="panel-heading">
+    <h3>
+      <span class="icon-set">P</span>redicate
+      <button type="button" class="add-predicate-btn btn btn-primary" data-pbid="<%= property_bridge.id %>" style="margin-left:20px;"><i class="fa fa-plus"></i></button>
+    </h3>
+  </div>
+  <div class="panel-body" id="predicate-wrapper-<%= property_bridge.id %>">
+    <% predicates.each_with_index do |predicate, i| %>
+      <%= render(partial: 'predicate_form',
+		 locals: {property_bridge: property_bridge,
+			  predicate: predicate,
+			  first: i == 0}) %>
+    <% end %>
+  </div>
+</div>
+
+<%# == Object == %>
+<% unless defined?(bnode) %>
+<div class="panel panel-triple">
+  <div class="panel-heading">
+    <h3><span class="icon-set bg-primary">O</span>bject</h3>
+  </div>
+  <div class="panel-body">
+    <%= render(partial: 'object_form',
+	       locals: { property_bridge: property_bridge,
+	 		 property_bridge_property_setting: property_bridge_property_setting }) %>
+  </div>
+</div>
+<% end %>
+
+<%# == WHERE condition == %>
+<% if defined?(bnode) %>
+<% property_bridge_property_setting = {condition: bnode_property[:condition]} %>
+<% end %>
+<div class="panel panel-triple">
+  <div class="panel-heading">
+    <h3>WHERE condition</h3>
+  </div>
+  <div class="panel-body">
+    <%= render(partial: 'po_where_condition_form',
+	       locals: { property_bridge: property_bridge,
+			 property_bridge_property_setting: property_bridge_property_setting }) %>
+  </div>
+</div>

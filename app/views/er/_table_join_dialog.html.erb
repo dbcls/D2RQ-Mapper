@@ -1,0 +1,36 @@
+<% if @target == 'subject'
+  path = subject_map_table_join_path(@table_join)
+elsif @target == 'predicate-object'
+  path = predicate_object_map_table_join_path(@table_join)
+end %>
+<%= form_tag(path, remote: true, method: :patch, class: "form-horizontal") do %>
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+
+    <div id="join-map-dialog-header" class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">&#215;</span><span class="sr-only">Close</span>
+      </button>
+      <h4 class="modal-title">JOIN: <%= @table_join.label_for_join_dialog %>
+	<% if @target == 'subject' %>
+	  <button type="button" id="join-add-subject-class-btn" class="btn btn-primary" style="margin-left:20px;"><i class="fa fa-plus"></i> Add Class form</button>
+	<% end %>
+      </h4>
+    </div><%# -- /modal-header -- %>
+
+    <div class="modal-body">
+      <% if @target == 'subject' %>
+	<%= render partial: 'class_maps/body', locals: { prefix: 'join-' } %>
+      <% elsif @target == 'predicate-object' %>
+	<%= render partial: 'property_bridges/body', locals: { prefix: 'join-' } %>
+      <% end %>
+    </div><%# -- /.modal-body -- %>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div><%# -- /.modal-footer -- %>
+
+  </div><%# -- /.modal-content -- %>
+</div><%# -- /.modal-dialog -- %>
+<% end %><%# -- /form_tag -- %>

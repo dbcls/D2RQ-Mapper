@@ -1,0 +1,16 @@
+<div class="modal fade" id="delete-bnode-confirm-dialog-<%= blank_node.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title" id="myModalLabel">Are you sure you want to delete blank node ?</h4>
+      </div>
+      <div class="modal-footer">
+	<%= button_tag 'Close', type: 'button', class: 'btn btn-default', data: { dismiss: 'modal' } %>
+	<%= link_to blank_node, method: :delete do %>
+	  <%= button_tag 'Delete blank node', type: 'button', class: 'btn btn-danger', id: 'delete-bnode-btn' %>
+	<% end %>
+      </div>
+    </div>
+  </div>
+</div>

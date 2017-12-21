@@ -1,0 +1,12 @@
+<% if @class_map.enable %>
+$("#rdf-btn-<%= @class_map.id %>").removeClass("btn-default btn-rdf-enable");
+$("#rdf-btn-<%= @class_map.id %>").addClass("btn-primary btn-rdf-disable");
+<% else %>
+$("#rdf-btn-<%= @class_map.id %>").removeClass("btn-primary btn-rdf-disable");
+$("#rdf-btn-<%= @class_map.id %>").addClass("btn-default btn-rdf-enable");
+<% end %>
+var tr = $("#rdf-btn-<%= @class_map.id %>").parents("tr");
+tr.toggleClass("disabled");
+
+$("p[role='alert']").remove();
+$("h1.heading01").after("<%= j(render partial: "success_message", locals: { message: update_success_message(@class_map) }) %>");

@@ -1,0 +1,306 @@
+// Place all the styles related to the er controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+$body_bgcolor: #eee;
+$ontology_width: 250px;
+$area_width: 2000px;
+$area_height: 2000px;
+
+body {
+  font-family: verdana, sans serif;
+  font-size: small;
+  padding: 0px;
+  margin: 0px;
+  background: $body_bgcolor;
+  visibility: hidden;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#ontology {
+  overflow: auto;
+  background-color: $body_bgcolor;
+  padding: 5px;
+}
+#ontology .tree-node-selected {
+    background: $body_bgcolor;
+}
+
+#area {
+  background: transparent image-url('er/back.png');
+  width: $area_width;
+  height: $area_height;
+}
+
+.draggable-item {
+  font-weight: bold;
+  border: 2px solid #888;
+  padding:3px;
+}
+
+
+#controls {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+#bar {
+    text-align: center;
+    background-color: #ccc;
+    position: fixed; 
+    top: 0px;
+    right: 0px;
+    width: 180px;
+    padding: 0px 5px 5px;
+    -moz-box-shadow: -4px 4px 8px #888; /* FF 3.5+ */
+    -webkit-box-shadow: -4px 4px 8px #888; /* Safari 3.0+, Chrome */
+    box-shadow: -4px 4px 8px #888; /* Opera 10.5, IE 9.0 */
+    filter: progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=215, Color='#888888'); /* IE 6, IE 7 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=215, Color='#888888')"; /* IE 8 */
+}
+
+#bar input {
+    display: block;
+    width: 90%;
+    margin: auto;
+}
+
+#bar input.small {
+    width: 45%;
+    display: inline;
+}
+
+#toggle {
+    padding: 5px 0px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    background-position: 50% 5px;
+    background-repeat: no-repeat;
+    height: 5px;
+}
+
+#toggle:hover {
+    background-color: #bbb;
+}
+
+#toggle.on {
+    background-image: image-url('er/up.gif');
+}
+
+#toggle.off {
+    background-image: image-url('er/down.gif');
+}
+
+#minimap {
+    position: fixed;
+    width: 100px;
+    height: 100px;
+    right: 0px;
+    bottom: 0px;
+    background-color: #fff;
+    border: 1px solid #000;
+    opacity: 0.9;
+    overflow: hidden;
+}
+
+.sqldesigner-mini {
+    position: absolute;
+    border: 1px solid #000;
+    background-color: #eea;
+    font-size: 1px;
+    line-height: 1px;
+}
+
+.mini_selected {
+    background-color: #f85;
+}
+
+.port {
+    position: absolute;
+    border: 2px solid #f00;
+}
+
+.sqldesigner-table {
+    position: absolute;
+    border: 1px solid #000;
+    background-color: #ddd;
+    cursor: pointer;
+    -moz-box-shadow: 4px 4px 8px #888; /* FF 3.5+ */
+    -webkit-box-shadow: 4px 4px 8px #888; /* Safari 3.0+, Chrome */
+    box-shadow: 4px 4px 8px #888; /* Opera 10.5, IE 9.0 */
+    filter: progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#888888'); /* IE 6, IE 7 */
+    -ms-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#888888'); /* IE 8 */
+    border-radius: 3px;
+}
+
+.sqldesigner-table table {
+    border-collapse: collapse;
+}
+
+.sqldesigner-table.selected {
+    border: 2px solid #000;
+}
+
+.sqldesigner-tablename {
+    background-color: #FFC0C0;
+}
+.sqldesigner-tablename.disable {
+    background-color: #CCCCCC;
+}
+
+.sqldesigner-table thead .sqldesigner-title {
+    text-align: center;
+    padding: 3px 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.sqldesigner-table tbody {
+    border-top: 1px dotted #888;
+}
+
+.sqldesigner-table tbody td {
+    padding: 3px;
+}
+
+.sqldesigner-table tbody .selected {
+    font-weight: bold;
+    color: #f00;
+    display: inline-block;
+}
+
+.sqldesigner-table tbody .title {
+    display: inline-block;
+}
+
+.sqldesigner-column-row {
+    background-color: #FFEEAA;
+}
+.sqldesigner-column-row.disable {
+    background-color: #FFFFFF;
+}
+
+.primary {
+    font-weight: bold;
+}
+
+.key {
+    font-style: italic;
+}
+
+.primary.key {
+    font-style: normal;
+}
+
+.typehint {
+    font-size: 80%;
+    color: gray;
+}
+
+.comment {
+    font-size: 80%;
+    font-weight: normal;
+    margin-right: 0.5em;
+}
+
+.adding {
+    cursor: crosshair;
+}
+
+.relation {
+    overflow: hidden;
+}
+
+#background {
+    position: absolute;
+    background-color: #000;
+    opacity: 0.5;
+    visibility: hidden;
+}
+
+#window {
+    position: absolute;
+    visibility: hidden;
+    background-color: #fff;
+    border: 6px double #333;
+}
+
+#windowtitle {
+    border-bottom: 2px solid #333;
+    padding: 2px;
+    padding-left: 1em;
+    font-weight: bold;
+    background-color: rgb(238, 238, 170);
+}
+
+#windowcontent {
+    padding: 1em;
+}
+
+#windowok, #windowcancel {
+    margin: 0em 1em 1em;
+}
+
+.small {
+    font-size: 85%;
+}
+
+#textarea {
+    width: 650px;
+    height: 200px;
+}
+
+#opts {
+    width: 700px;
+}
+
+#keys {
+    white-space: nowrap; 
+    text-align: center;
+}
+
+legend {
+    font-weight: bold;
+}
+
+label, input, select {
+    vertical-align: middle;
+}
+
+#throbber {
+    position: absolute;
+    top: 2px;
+    right: 3px;
+}
+
+#rubberband {
+    position: absolute;
+    border: 1px solid #000;
+    background: #888;
+    opacity: 0.5;
+    visibility: hidden;
+}
+
+svg > path.relation:hover {
+    cursor: pointer;
+}
+
+.sqldesigner-column-row {
+    .er-column-rdf-btn {
+        padding: 7px;
+    }
+    .btn-rdf-disable:before, .btn-rdf-enable:before {
+        width: 1.5em;
+    }
+}
+
+#er-message {
+    margin: 0px;
+    padding: 5px 25px 5px 15px;
+    position: fixed;
+    top: 0px;
+}

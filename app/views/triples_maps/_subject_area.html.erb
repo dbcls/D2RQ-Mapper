@@ -1,0 +1,29 @@
+<% if @class_map_property_setting[:subject].class_map_property.property == 'd2rq:uriPattern' %>
+<%   subject_value = uri_for_disp(@base_uri, @namespace_prefixes, @subject_uri[@class_map_property_setting[:subject].class_map_property.property]) %>
+<% else %>
+<%   subject_value = @subject_uri[@class_map_property_setting[:subject].class_map_property.property] %>
+<% end %>
+
+<div id="setting-subject">
+  <span class="value">
+    <span class="icon-set bg-primary">S</span>
+    <%= subject_value %>
+  </span>
+</div>
+
+<div class="panel panel-triple subject">
+  <div class="panel-heading">
+    <h3>
+      <span class="icon-set bg-primary">S</span>ubject
+    </h3>
+  </div>
+  <div class="panel-body">
+    <div style="text-align:center;">
+      <span class="value">
+	<span class="icon-set bg-primary">S</span>
+	<%= subject_value %>
+      </span>
+    </div>
+    <%= render 'subject_form' %>
+  </div>
+</div>

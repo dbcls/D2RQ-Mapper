@@ -1,0 +1,21 @@
+<%
+value ||= ""
+prefix ||= ""
+%>
+<div class="form-group">
+  <label class="col-sm-2 control-label" style="width:10%;"></label>
+  <div class="col-sm-9">
+    <%= text_field_tag("predicates[#{@property_bridge.id}][]",
+		       absolute_uri(@base_uri, value),
+		       class: "form-control") %>
+  </div>
+  <span>
+    <%= button_tag(type: 'button',
+		   class: "#{prefix}predicate-del-btn btn btn-default btn-delete",
+		   style: 'width:36px; height:32px; margin:0px; padding:0px') {
+	   content_tag(:i, nil,
+		       class: ['fa', 'fa-trash-o'],
+		       style: "width:11px; height:11px; text-align:center; font-size:18px; margin:0px; padding:0px;")
+	} %>
+  </span>
+</div>

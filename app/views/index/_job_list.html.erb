@@ -1,0 +1,17 @@
+<table id="job_list" class="job_table" border="1">
+<tr>
+  <th>Name</th>
+  <th>Comment</th>
+  <th>Action</th>
+</tr>
+<% @works.each do |work| %>
+<tr class="<%= cycle('even', 'odd') %>">
+  <td><%= work.name %></td>
+  <td><%= work.comment %></td>
+  <td>
+    <%= link_to "Edit", {controller: :index, action: :set_work, id: work.id}, remote: true, style: "text-decolation:none;" %>
+    <%= link_to "Delete", {controller: :index, action: :delete_work, id: work.id}, data: {confirm: 'Are you sure ?'}, remote: true, style: "text-decolation:none;" %>
+  </td>
+</tr>
+<% end %>
+</table>

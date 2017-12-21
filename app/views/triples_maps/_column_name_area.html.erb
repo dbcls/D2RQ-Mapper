@@ -1,0 +1,30 @@
+<% if defined?(bnode) %>
+<% column_name = "Blank node: #{bnode.label}" %>
+<% else %>
+<% column_name = @class_map_type == 'T' ? property_bridge.real_column_name : "" %>
+<% end %>
+
+<div class="checkbox">
+  <a data-toggle="collapse" href="#collapse<%= property_bridge.id %>" aria-expanded="false" aria-controls="collapse<%= property_bridge.id %>">
+    <i class="fa fa-chevron-circle-down"></i><label class="column-name"><%= column_name %></label>
+  </a>
+  <label>
+    <%= hidden_field_tag("property_bridge[#{property_bridge.id}][enable]", property_bridge.enable, id: "column-rdf-enable-#{property_bridge.id}") %>
+    <button type="button" class="<%= column_rdf_button_class(property_bridge) %>" id="column-rdf-btn-<%= property_bridge.id %>"></button>
+    <span>
+    <% if first %>
+      <button type="button" class="add-property-bridge-btn btn btn-primary"><i class="fa fa-plus"></i></button>
+    <% else %>
+      <button type="button" class="del-property-bridge-btn btn btn-default btn-delete" data-pbid="<%= property_bridge.id %>"><i class="fa fa-trash-o"></i></button>
+    <% end %>
+    </span>
+  </label>
+
+  <% if defined?(bnode) %>
+    <span class="value"><span class="icon-set">P</span><%= bnode_property[:predicates].map { |predicate| uri_for_disp(@base_uri, @namespace_prefixes, predicate.value) }.join(', ') %></span>
+  <% else %>
+    <% if property_bridge_property_setting && property_bridge_property_setting[:predicates] %>
+      <span class="value"><span class="icon-set">P</span><%= property_bridge_property_setting[:predicates].map { |predicate| uri_for_disp(@base_uri, @namespace_prefixes, predicate.value).gsub('col_', '') }.join(', ') %> <span class="icon-set bg-primary">O</span><%= object_value_for_disp(@base_uri, @namespace_prefixes, property_bridge_property_setting[:object]).gsub('col_', '') %></span>
+    <% end %>
+  <% end %>
+</div>

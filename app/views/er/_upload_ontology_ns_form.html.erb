@@ -1,0 +1,7 @@
+<div>
+  Prefix: <%= text_field_tag "ns_prefix[]", "", size: 8 %>
+  URL: <%= text_field_tag "ns_uri[]", "", size: 60 %>
+  <% if del_btn %>
+    <button type="button" class="upload-ontology-ns-btn-delete btn btn-default btn-delete"><i class="fa fa-trash-o"></i></button></td>
+  <% end %>
+</div>

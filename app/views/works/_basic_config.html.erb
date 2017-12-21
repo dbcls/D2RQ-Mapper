@@ -1,0 +1,25 @@
+<div class="form-group required">
+  <%= f.label :name, 'Name', class: 'col-sm-2 control-label' %>
+  <div class="col-sm-9">
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+  <%= render partial: 'tooltip_icon', locals: { title: "[Required] Label for D2RQ mapping (typically use a database name to be configured)." } %>
+</div>
+
+<div class="form-group">
+  <%= f.label :comment, 'Comment', class: 'col-sm-2 control-label' %>
+  <div class="col-sm-9">
+    <%= f.text_area :comment, class: "form-control", rows: 3 %>
+  </div>
+  <%= render partial: 'tooltip_icon', locals: { title: " [Optional] Additional notes if any." } %>
+</div>
+
+<div class="form-group">
+  <%= f.label :base_uri, 'Base URI', class: 'col-sm-2 control-label' %>
+  <div class="col-sm-9">
+    <%= f.text_field :base_uri, id: "base-uri", class: "form-control", placeholder: DEFAULT_BASE_URI %>
+  </div>
+  <%= render partial: 'tooltip_icon', locals: { title: %Q|Specify a URI prefix for making relative URIs used in the mappings/RDF dump (strongly recommended to provide a specific domain name for your database as the default is #{DEFAULT_BASE_URI})| } %>
+</div>
+
+<%= f.hidden_field :user_id %>

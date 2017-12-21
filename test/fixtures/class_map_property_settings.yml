@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  class_map_id: 1
+  class_map_property_id: 1
+  value: MyText
+
+two:
+  class_map_id: 1
+  class_map_property_id: 1
+  value: MyText

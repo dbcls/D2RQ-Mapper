@@ -1,0 +1,24 @@
+<% object_format = property_bridge_property_setting[:object].property_bridge_property.property %>
+<%# object_format = property_bridge_property_setting ? property_bridge_property_setting[:object].property_bridge_property.property : nil %>
+
+<%# == 'URI pattern', 'URI column', 'Literal pattern', 'Literal column' == %>
+<div class="form-group required">
+  <%= render(partial: 'object_format_form',
+	     locals: {property_bridge: property_bridge,
+		      property_bridge_property_setting: property_bridge_property_setting}) %>
+</div>
+
+<%# == Object (URI / Literal) == %>
+<div class="form-group required">
+  <%= render(partial: 'object_uri_literal_form',
+	     locals: {property_bridge: property_bridge,
+		      property_bridge_property_setting: property_bridge_property_setting,
+		      object_format: object_format}) %>
+</div>
+
+<%# == Language, Datatype == %>
+<div class="form-group" id="object-language-datatype-<%= property_bridge.id %>"<% if object_format == 'd2rq:uriPattern' || object_format == 'd2rq:uriColumn' %> style="display:none;"<% end %>>
+  <%= render(partial: 'object_language_datatype_form',
+	     locals: {property_bridge: property_bridge,
+		      property_bridge_property_setting: property_bridge_property_setting}) %>
+</div>

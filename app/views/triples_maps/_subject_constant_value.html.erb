@@ -1,0 +1,5 @@
+<% property = 'd2rq:constantValue' %>
+<%= text_field_tag("class_map_property_setting[#{@class_map_property_setting[:subject].id}][#{property}][value]",
+		   @subject_uri[property],
+		   id: "subject-constant-value", class: "form-control",
+		   style: "display:none;") %>

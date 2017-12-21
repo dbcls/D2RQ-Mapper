@@ -1,0 +1,2 @@
+module BlankNodesHelper
+end

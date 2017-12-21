@@ -1,0 +1,29 @@
+<% def_atag_class = "btn btn-default btn-block" -%>
+<% cur_atag_class = "btn btn-primary btn-block" -%>
+<section id="side">
+  <div class="menu">
+    <h1 class="haeding-get">Get graph database</h1>
+
+    <ul class="btn-set">
+
+      <h2>Download</h2>
+      <li<%== current == 'd2rq' ? ' class="current"' : '' %>>
+	<%= link_to 'D2RQ Mapping', d2rq_mapping_path, class: "#{current == 'd2rq' ? cur_atag_class : def_atag_class}" %>
+      </li>
+      <li<%== current == 'r2rml' ? ' class="current"' : '' %>>
+	<%= link_to 'R2RML Mapping', r2rml_mapping_path, class: "#{current == 'r2rml' ? cur_atag_class : def_atag_class}" %>
+      </li>
+
+      <h2>RDF / SPARQL</h2>
+      <li<%== current == 'rdf' ? ' class="current"' : '' %>>
+	<%= link_to 'RDF (Turtle)', turtle_path, class: "#{current == 'rdf' ? cur_atag_class : def_atag_class}" %>
+      </li>
+      <li<%== current == 'sparql' ? ' class="current"' : '' %>>
+	<%= link_to 'SPARQL', sparql_path, class: "#{current == 'sparql' ? cur_atag_class : def_atag_class}" %>
+      </li>
+
+    </ul>
+
+    <%= render partial: 'goto_menu_link', locals: { next_link: false } %>
+  </div>
+</section>

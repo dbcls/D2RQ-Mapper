@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,700">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <%= stylesheet_link_tag 'import' %>
+    <%= stylesheet_link_tag 'style' %>
+    <%# = stylesheet_link_tag 'graphs' %>
+    <%# = stylesheet_link_tag 'menus' %>
+    <%# = stylesheet_link_tag 'triples_maps' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag 'bootstrap.min' %>
+    <%= csrf_meta_tags %>
+    <style>
+    body {
+      background: #CCC;
+    }
+    .panel {
+      /* width: 3000px; */
+      border: 0px;
+    }
+    .panel-default {
+      /* width: 1000px; */
+    }
+    .panel-body {
+      padding: 0px;
+    }
+    table {
+    }
+    tr {
+      background: #FFF;
+    }
+    </style>
+    <%= yield :head %>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>

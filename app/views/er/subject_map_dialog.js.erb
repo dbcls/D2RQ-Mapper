@@ -1,0 +1,8 @@
+$("#staticModalSubjectMap").html("<%= j render(partial: 'subject_map_dialog') %>");
+<%= render partial: 'subject_map', format: [:js], locals: { prefix: '' } %>
+$("#staticModalSubjectMap").draggable({
+  handle: "#subject-map-dialog-header"
+});
+$('[data-toggle="tooltip"]').tooltip();
+
+$("#staticModalSubjectMap").modal();

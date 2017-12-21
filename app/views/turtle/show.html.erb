@@ -1,0 +1,71 @@
+<% content_for :head do %>
+<title>RDF (Turtle) | D2RQ Mapper</title>
+<%= javascript_include_tag 'eventsource' %>
+<script type="text/javascript">
+    var generation_handler = null;
+    var status = "";
+
+    var get_generation_status = function() {
+        $.getJSON("<%= generation_status_turtle_path(@work) %>", function(json) {
+            status = json.status;
+        });
+    };
+
+    var refresh = function() {
+        get_generation_status();
+        if (status == "SUCCESS") {
+            $("#d2rq-turtle-message").hide();
+            $.getScript("<%= refresh_button_area_turtle_path(@work) %>");
+            $("#d2rq-turtle-submit-btn-wrapper").show();
+            clearInterval(generation_handler);
+        } else if (status == 'ERR0R') {
+            clearInterval(generation_handler);
+        } else {
+        }
+    };
+
+$(function() {
+  $('[data-toggle="tooltip"]').tooltip();
+  $.get("<%= download_turtle_path %>?nosse", function(data) {
+    $("#d2rq-dumped-turtle-textarea").val(data);
+    $("#d2rq-dumped-turtle-running-icon").hide();
+    CodeMirror.fromTextArea(document.getElementById("d2rq-dumped-turtle-textarea"), {
+      mode: "text/turtle",
+      matchBrackets: true,
+      lineNumbers: true,
+      lineWrapping: true
+    });
+  });
+
+  <% if @generation_runninig %>
+    generation_handler = setInterval("refresh()", 1000);
+  <% end %>
+});
+</script>
+<% end %>
+
+<% content_for :side do %>
+  <%= render partial: 'graphs/side_menu', locals: { current: 'rdf' } %>
+<% end %>
+
+<h1 class="heading01">RDF (Turtle)</h1>
+<div id="d2rq-info-message">
+  <% unless @turtle_exist %>
+      <%= render(partial: 'info_message', locals: { message: 'Turtle file does not exist. In order to download the turtle file, you need to generate the turtle file.' })%>
+  <% else %>
+      <% unless @turtle_is_latest %>
+          <%= render(partial: 'info_message', locals: { message: 'The mapping was changed after the turtle file creation. You need to update the turtle file.' })%>
+      <% end %>
+  <% end %>
+</div>
+
+<div id="d2rq-turtle-submit-btn-wrapper" class="submit form-group">
+  <%== button_area %>
+</div>
+
+<div id="d2rq-turtle-message" style="font-size:x-large; font-weight:bold; text-align:center; margin-15px;<% unless @generation_runninig %> display:none;<% end %>">Generating turtle ...</div>
+
+<div style="padding:5px;">
+  <%= image_tag "arrow45-010.gif", id: "d2rq-dumped-turtle-running-icon" %>
+  <textarea id="d2rq-dumped-turtle-textarea" style="display:none;"></textarea>
+</div>

@@ -1,0 +1,15 @@
+<label for="object-language-<%= property_bridge.id %>" class="col-sm-2 control-label">Language</label>
+<div class="col-sm-3">
+  <%= text_field_tag("property_bridge_property_setting[#{property_bridge_property_setting[:language].id}][value]",
+	             property_bridge_property_setting[:language].value,
+                     id: "object-language-#{property_bridge.id}", class: "form-control input-sm") %>
+</div>
+<%= render partial: 'tooltip_icon', locals: { title: %Q|[Optional] Specify a language tag (e.g., en for English, ja for Japanese) to be added for generating an object literal with a language tag (e.g., &quot;foobar&quot;@en)| } %>
+
+<label for="object-datatype-<%= property_bridge.id %>" class="col-sm-2 control-label">Datatype</label>
+<div class="col-sm-3">
+  <%= text_field_tag("property_bridge_property_setting[#{property_bridge_property_setting[:datatype].id}][value]",
+		     property_bridge_property_setting[:datatype].value,
+		     id:"object-datatype-#{property_bridge.id}", class: "form-control input-sm") %>
+</div>
+<%= render partial: 'tooltip_icon', locals: { title: "[Optional] Specify a datatype URI (e.g., xsd:integer) to be added for generating an object literal with a datatype (e.g., 123^^xsd:integer)" } %>

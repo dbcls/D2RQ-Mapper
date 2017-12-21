@@ -1,0 +1,12 @@
+<% content_for :head do %>
+<%= javascript_include_tag 'namespaces' %>
+<title>D2RQ Mapper - <%= @work.name %></title>
+<script>
+$(function() {
+  Namespace.bind_ui();
+});
+</script>
+<% end %>
+<div style="background:#eee; padding:10px;">
+  <%= render partial: 'namespaces/main_section', locals: { remote: true } %>
+</div>

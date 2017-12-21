@@ -1,0 +1,11 @@
+<% if @first_turtle_generation
+  g_or_u = 'generation'
+else
+  g_or_u = 'update'
+end %>
+
+$("#d2rq-turtle-submit-btn-wrapper").html("<%== j button_area %>");
+<% if @turtle_is_latest %>
+$("#d2rq-info-message").html("<%== j(render partial: 'info_message', locals: { message: "The #{g_or_u} of the turtle file has ended." }) %>");
+$("#d2rq-info-message").show();
+<% end %>

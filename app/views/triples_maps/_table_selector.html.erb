@@ -1,0 +1,9 @@
+<h2 class="heading02">Selected table</h2>
+<div class="form-group">
+  <div class="col-sm-11">
+    <%= select_tag("class_map_id",
+	           grouped_options_for_select(@grouped_triples_maps, @class_map.id),
+                   id: "table-selector", class: "form-control") %>
+  </div>
+  <%#= render partial: 'tooltip_icon', locals: { title: "Some tooltip text!" } %>
+</div>

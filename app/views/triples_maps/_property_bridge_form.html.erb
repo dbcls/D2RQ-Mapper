@@ -1,0 +1,13 @@
+<% collapse_class = @class_map_type == 'T' ? "collapse in" : "collapse" %>
+<li class="list-group-item<% unless property_bridge.enable %> disabled<% end %>" id="column-listitem-<%= property_bridge.id %>" data-pbid="<%= property_bridge.id %>">
+  <%= render(partial: 'column_name_area',
+	     locals: {property_bridge: property_bridge,
+		      property_bridge_property_setting: property_bridge_property_setting,
+		      first: first}) %>
+
+  <div class="<%= collapse_class %>" id="collapse<%= property_bridge.id %>" style="height: 0px;">
+    <%= render(partial: 'predicate_object_area',
+	       locals: {property_bridge: property_bridge,
+			property_bridge_property_setting: property_bridge_property_setting}) %>
+  </div>
+</li>

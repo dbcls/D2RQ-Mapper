@@ -1,0 +1,28 @@
+<%= form_tag(search_sparql_path, remote: true, id: "sparql-form", class: "form-horizontal") do %>
+
+<div class="form-group">
+  <div>
+    <!-- label for="sparql-query" class="col-sm-2 control-label">SPARQL Query</label -->
+    <label for="sparql-query" class="control-label" style="padding-left:15px;">SPARQL Query</label>
+  </div>
+  <div class="col-sm-9">
+    <%= text_area_tag :query, "#{@prefixes}\n\nSELECT * { ?s ?p ?o . } LIMIT 10\n\n\n\n\n\n\n\n\n", id: "sparql-query", class: "form-control", rows: 10 %>
+  </div>
+  <%#= render partial: 'tooltip_icon', locals: { title: "Some tooltip text!" } %>
+</div>
+
+<div class="form-group">
+  <label for="query-result-format" class="col-sm-2 control-label">Format</label>
+  <div class="col-sm-9">
+    <%= select_tag :output_format,
+	options_for_select({ "Text" => "text", "XML" => "xml", "JSON" => "json", "CSV" => "csv", "TSV" => "tsv" }),
+    id: "query-result-format", class: "form-control" %>
+  </div>
+  <%#= render partial: 'tooltip_icon', locals: { title: "Some tooltip text!" } %>
+</div>
+
+<div class="submit form-group">
+  <button type="submit" id="sparql-submit" class="btn btn-primary"><i class="fa fa-search"></i>Search</button>
+</div>
+
+<% end %>

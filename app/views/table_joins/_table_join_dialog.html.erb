@@ -1,0 +1,84 @@
+<div class="modal" id="modal-join" tabindex="-1" role="dialog" aria-hidden="true" data-show="true" data-keyboard="false" data-backdrop="">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div id="add-join-dialog-header" class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title">Join</h4>
+      </div>
+      <div class="modal-body">
+	<div class="join-edit-view">
+	  <%= form_for @table_join, html: { class: "form-inline" } do |f| %>
+	    <div class="chart">
+	      <div class="edge"></div>
+	      <div class="node subject"><p>Subject</p></div>
+	      <div class="node intermediate">
+		<div class="checkbox">
+		  <label for="intermediate_switch">
+		    <%= check_box_tag "intermediate", "1", false, class: "form-control input-sm", id: "intermediate_switch" %>
+		    Intermediate table
+		  </label>
+		</div>
+	      </div>
+	      <div class="node object"><p>Object</p></div>
+	    </div>
+	    <div class="selectors tables">
+	      <h3>Table</h3>
+	      <div class="element subject">
+		<div class="inner">
+		  <div class="form-group">
+		    <%= f.select :l_table_class_map_id, @class_maps.map{ |cm| [cm.table_name, cm.id] }, {}, class: "form-control input-sm" %>
+		  </div>
+		</div>
+	      </div>
+	      <div class="element intermediate">
+		<div class="inner">
+		  <div class="form-group">
+		    <%= f.select :i_table_class_map_id, @class_maps.map{ |cm| [cm.table_name, cm.id] }, {}, class: "form-control input-sm" %>
+		  </div>
+		</div>
+	      </div>
+	      <div class="element object">
+		<div class="inner">
+		  <div class="form-group">
+		    <%= f.select :r_table_class_map_id, @class_maps.map{ |cm| [cm.table_name, cm.id] }, {}, class: "form-control input-sm" %>
+		  </div>
+		</div>
+	      </div>
+	    </div>
+	    <div class="selectors columns">
+	      <h3>Column</h3>
+	      <div class="element subject">
+		<div class="inner">
+		  <div class="form-group">
+		    <%= f.select :l_table_property_bridge_id, @property_bridges[@class_maps[0].id].map{ |pb| [pb.column_name, pb.id] }, {}, class: "form-control input-sm"  %>
+		  </div>
+		</div>
+	      </div>
+	      <div class="element intermediate">
+		<div class="inner">
+		  <div class="form-group">
+		    <%= f.select :i_table_l_property_bridge_id, @property_bridges[@class_maps[0].id].map{ |pb| [pb.column_name, pb.id] }, {}, class: "form-control input-sm" %>
+		    <%= f.select :i_table_r_property_bridge_id, @property_bridges[@class_maps[0].id].map{ |pb| [pb.column_name, pb.id] }, {}, class: "form-control input-sm" %>
+		  </div>
+		</div>
+	      </div>
+	      <div class="element object">
+		<div class="inner">
+		  <div class="form-group">
+		    <%= f.select :r_table_property_bridge_id, @property_bridges[@class_maps[0].id].map{ |pb| [pb.column_name, pb.id] }, {}, class: "form-control input-sm" %>
+		  </div>
+		</div>
+	      </div>
+	    </div>
+	    <%= f.hidden_field :work_id %>
+	    <%= hidden_field_tag 'page', page %>
+	    <div class="modal-footer">
+	      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      <button type="submit" class="btn btn-primary">Add table join</button>
+	    </div>
+	  <% end %>
+	</div><!-- /.join-edit-view -->
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

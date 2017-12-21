@@ -1,0 +1,33 @@
+<h1 class="heading01"><%= current_user.username == 'togodb-demo' ? 'Databases' : 'Tables' %></h1>
+<%= render 'flash_message' %>
+
+<div class="form-group text-center">
+  <% unless @class_maps.empty? %>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-join"></i><span>Join</span></button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-bnode"></i><span>Blank node</span></button>
+  <% end %>
+</div>
+
+<div class="db-tables">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title"><i class="fa fa-database"></i><%= current_user.username == 'togodb-demo' ? 'TogoDB' : @database %></h3>
+    </div>
+    <div class="panel-body">
+      <%= render 'tables' %>
+    </div>
+  </div>
+</div>
+
+<% @table_joins.each do |table_join| %>
+  <%= render partial: 'delete_join_confirm_dialog', locals: { table_join: table_join } %>
+<% end %>
+
+<% @blank_nodes.each do |blank_node| %>
+  <%= render partial: 'delete_bnode_confirm_dialog', locals: { blank_node: blank_node } %>
+<% end %>
+
+<% unless @class_maps.empty? %>
+  <%= render partial: 'table_joins/table_join_dialog', locals: { page: 'subject_map' } %>
+  <%= render 'blank_node_dialog' %>
+<% end %>

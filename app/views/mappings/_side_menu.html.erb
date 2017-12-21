@@ -1,0 +1,32 @@
+<% def_atag_class = "btn btn-default btn-block" -%>
+<% cur_atag_class = "btn btn-primary btn-block" -%>
+<div class="menu">
+  <h1 class="haeding-edit">Edit mapping</h1>
+  <ul class="btn-set">
+    <li<% if current == 'subject_maps' %> class="current"<% end %>>
+      <% if current_user.username == 'togodb-demo' %>
+	<%= link_to 'Databases', subject_map_path(@work.id), class: "#{current == 'subject_maps' ? cur_atag_class : def_atag_class}", id: 'tables-link' %>
+      <% else %>
+	<%= link_to 'Tables', subject_map_path(@work.id), class: "#{current == 'subject_maps' ? cur_atag_class : def_atag_class}", id: 'tables-link' %>
+      <% end %>
+    </li>
+
+    <% unless class_map.nil? %>
+      <li<% if current == 'triples_maps' %> class="current"<% end %>>
+	<%= link_to 'Configure mapping', triples_map_path(class_map), class: "#{current == 'triples_maps' ? cur_atag_class : def_atag_class}", id: 'configure-link' %>
+      </li>
+    <% end %>
+    <li<% if current == 'namespaces' %> class="current"<% end %>>
+      <%= link_to 'Namespaces', namespace_path(@work.id), class: "#{current == 'namespaces' ? cur_atag_class : def_atag_class}", id: 'namespaces-link' %>
+    </li>
+  </ul>
+  <%= render partial: 'goto_menu_link', locals: { next_link: true, href: d2rq_mapping_path(@work.id) } %>
+
+  <% if current == 'triples_maps' %>
+    <div class="delineation">
+      <div class="subject"><div class="icon"><span class="icon-set bg-primary">S</span></div><p class="description">Subject</p></div>
+      <div class="predicate"><span class="icon-set">P</span><p class="description">Predicate</p></div>
+      <div class="object"><div class="icon"><span class="icon-set bg-primary">O</span></div><p class="description">Object</p></div>
+    </div>
+  <% end %>
+</div>

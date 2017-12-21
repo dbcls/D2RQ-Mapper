@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  work_id: 1
+  start_date: 2017-05-12 18:05:31
+  end_date: 2017-05-12 18:05:31
+  pid: 1
+  status: MyString
+  path: MyString
+  error_message: MyText
+
+two:
+  work_id: 1
+  start_date: 2017-05-12 18:05:31
+  end_date: 2017-05-12 18:05:31
+  pid: 1
+  status: MyString
+  path: MyString
+  error_message: MyText

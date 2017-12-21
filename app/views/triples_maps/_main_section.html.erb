@@ -1,0 +1,30 @@
+<%= form_tag(triples_map_path(@class_map), method: :patch, class: "form-horizontal") do %>
+  <h1 class="heading01">Configure mapping</h1>
+  <%= render 'flash_message' %>
+
+  <% if disp_table_selector?(@grouped_triples_maps) %>
+    <%= render 'table_selector' %>
+  <% end %>
+
+  <% if @table_not_found %>
+    Table not found in database.
+  <% else %>
+    <h2 class="heading02">Example records</h2>
+    <%= render 'example_records' %>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+	<% if @class_map.for_bnode? %>
+	  <%= render 'subject_area_for_bnode' %>
+	<% else %>
+	  <%= render 'subject_area' %>
+	<% end %>
+	<%= render 'properties_form' %>
+      </div>
+    </div>
+
+    <div class="submit form-group">
+      <button type="submit" class="btn btn-primary"><i class="fa fa-heart"></i>Save</button>
+    </div>
+  <% end %>
+<% end %>

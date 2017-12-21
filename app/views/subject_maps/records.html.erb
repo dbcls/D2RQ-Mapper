@@ -1,0 +1,45 @@
+<!-- <div class="panel panel-default"> -->
+<div style="background:#555;">
+  <div class="panel-heading">
+    <h3 class="panel-title"><i class="fa fa-database"></i><%= @db_connection.database %>:<i class="fa fa-table"></i><%= @exmaple_records_table_name %></h3>
+  </div>
+  <div class="panel-body">
+    <% if @records.empty? %>
+      <table class="table">
+	<thead>
+	  <tr>
+	    <% @columns.each do |column| %>
+	      <th class="nowrap">
+		<%= column %>
+	      </th>
+	    <% end %>
+	  </tr>
+	</thead>
+	<tbody>
+	  <tr><td colspan="<%= @columns.size %>">No records.</td></tr>
+	</tbody>
+      </table>
+    <% else %>
+      <table class="table">
+	<thead>
+	  <tr>
+	    <% @columns.each do |column| %>
+	      <th class="nowrap">
+		<%== column %>
+	      </th>
+	    <% end %>
+	  </tr>
+	</thead>
+	<tbody>
+	  <% @records.each do |record| %>
+	    <tr>
+	      <% @columns.each do |column| %>
+		<td><%= record[column].to_s.truncate(40) %></td>
+	      <% end %>
+	    </tr>
+	  <% end %>
+	</tbody>
+      </table>
+    <% end %>
+  </div>
+</div>

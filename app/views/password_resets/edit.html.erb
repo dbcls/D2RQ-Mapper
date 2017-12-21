@@ -1,0 +1,40 @@
+<div id="contents">
+
+  <section id="side">
+    <div class="menu">
+      <h1 class="heading-user-account">User account</h1>
+      <ul class="btn-set">
+        <li class="current"><%= link_to 'Login', new_user_session_path, class: "btn btn-primary btn-block" %></li>
+        <li><%= link_to 'Sing up', new_user_registration_path, class: "btn btn-default btn-block" %></li>
+        <li><%= link_to 'Edit profile', edit_user_registration_path, class:"btn btn-default btn-block disabled" %></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="main">
+    <%= form_for @user, url: password_reset_path(params[:id]), html: { class: "form-horizontal" } do |f| %>
+        <h1 class="heading01">Change password</h1>
+        <% if @user.errors.any? %>
+            <%= render partial: 'alert_message', locals: { message: @user.errors.full_messages } %>
+        <% end %>
+        <div class="form-group required">
+          <%= f.label :password, class: "col-sm-2 control-label" %>
+          <div class="col-sm-9">
+            <%= f.password_field :password, class: "form-control" %>
+          </div>
+        </div>
+        <div class="form-group required">
+          <%= f.label :password_confirmation, class: "col-sm-2 control-label" %>
+          <div class="col-sm-9">
+            <%= f.password_field :password_confirmation, class: "form-control" %>
+          </div>
+        </div>
+        <div class="submit form-group">
+          <%= f.button class: "btn btn-primary" do %>
+              <i class="fa fa-sign-in"></i>Change password
+          <% end %>
+        </div>
+    <% end %>
+  </section>
+
+</div>

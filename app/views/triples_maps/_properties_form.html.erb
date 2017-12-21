@@ -1,0 +1,15 @@
+<% prev_column = '' %>
+<ul class="list-group">
+  <% @property_bridges.each do |property_bridge| %>
+    <% next if @property_bridge_property_setting[property_bridge.id].nil? %>
+    <%= render partial: 'property_bridge_form',
+               locals: {property_bridge: property_bridge,
+                        property_bridge_property_setting: @property_bridge_property_setting[property_bridge.id],
+			first: prev_column != property_bridge.column_name} %>
+    <% prev_column = property_bridge.column_name %>
+  <% end %>
+
+  <% @blank_node.each do |blank_node_id, property| %>
+    <%= render partial: 'property_bridge_bnode_form', locals: {bnode_property: property} %>
+  <% end %>
+</ul>

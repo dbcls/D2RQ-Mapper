@@ -1,0 +1,19 @@
+<% collapse_class = "collapse in" %>
+<% blank_node = bnode_property[:blank_node] %>
+<% property_bridge = blank_node.property_bridge %>
+<li class="list-group-item<% unless property_bridge.enable %> disabled<% end %>" id="column-listitem-<%= property_bridge.id %>" data-pbid="<%= property_bridge.id %>">
+  <%= render(partial: 'column_name_area',
+	     locals: {bnode: blank_node,
+		      bnode_property: bnode_property,
+		      property_bridge: property_bridge,
+		      property_bridge_property_setting: nil,
+		      first: true}) %>
+
+  <div class="<%= collapse_class %>" id="collapse<%= property_bridge.id %>" style="height: 0px;">
+    <%= render(partial: 'predicate_object_area',
+	       locals: {bnode: blank_node,
+			bnode_property: bnode_property,
+			property_bridge: property_bridge,
+			property_bridge_property_setting: nil}) %>
+  </div>
+</li>

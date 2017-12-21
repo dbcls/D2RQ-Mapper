@@ -1,0 +1,27 @@
+<% content_for :head do %>
+<title>R2RML | D2RQ Mapper</title>
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+    mode: "text/turtle",
+    matchBrackets: true,
+    lineNumbers: true,
+    lineWrapping: true
+  });
+});
+</script>
+<% end %>
+
+<% content_for :side do %>
+  <%= render partial: 'graphs/side_menu', locals: { current: 'r2rml' } %>
+<% end %>
+
+<h1 class="heading01">R2RML Mapping</h1>
+<div class="submit form-group">
+  <%= link_to download_r2rml_mapping_path do %>
+    <button type="submit" id="sparql-submit" class="btn btn-primary"><i class="fa fa-download"></i>Download</button>
+  <% end %>
+</div>
+<textarea id="code"><%= @mapping_data %></textarea>

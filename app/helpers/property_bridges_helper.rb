@@ -1,0 +1,2 @@
+module PropertyBridgesHelper
+end

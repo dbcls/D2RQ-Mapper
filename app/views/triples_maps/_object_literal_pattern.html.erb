@@ -1,0 +1,14 @@
+<%
+property = 'd2rq:pattern'
+
+name = "property_bridge_property_setting[#{property_bridge_property_setting[:object].id}][#{property}][value]"
+
+value = @object_value[property_bridge.id] ? @object_value[property_bridge.id][property] : ""
+
+html_opts = { id: "object-literal-pattern-#{property_bridge.id}", class: "form-control" }
+unless disp
+  html_opts[:style] = "display:none;"
+end
+%>
+
+<%= text_field_tag(name, value, html_opts) %>

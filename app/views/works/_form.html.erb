@@ -1,0 +1,54 @@
+<% content_for :head do %>
+<title>Set relational databases | D2RQ Mapper</title>
+<%= stylesheet_link_tag 'works' %>
+<script>
+$(function () {
+  <% if @db_connection.adapter == 'sqlite3' %>
+    $("#db-connection-host-part").hide();
+    $("#db-connection-port-part").hide();
+    $("#db-connection-username-part").hide();
+    $("#db-connection-password-part").hide();
+    $("#db-connection-db-label").text('Database');
+  <% end %>
+  
+  $('[data-toggle="tooltip"]').tooltip();
+  $(window).bind("load resize", init);
+  function init() {
+    var _height = $(window).height();
+    if(_height < 700) {
+      $('body').addClass('scroll');
+    } else {
+      $('body').removeClass('scroll');
+    }
+  };
+
+  <% unless @work.id %>
+  $("#next-link").click(function() {
+    return false;
+  });
+  <% end %>
+
+  $("#db_connection_adapter").change(function() {
+    var selected_adapter = $("#db_connection_adapter option:selected").val();
+    if (selected_adapter == "sqlite3") {
+      $("#db-connection-host-part").hide();
+      $("#db-connection-port-part").hide();
+      $("#db-connection-username-part").hide();
+      $("#db-connection-password-part").hide();
+      $("#db-connection-db-label").text('Database');
+    } else {
+      $("#db-connection-host-part").show();
+      $("#db-connection-port-part").show();
+      $("#db-connection-username-part").show();
+      $("#db-connection-password-part").show();
+      $("#db-connection-db-label").text('Database name');
+    }
+  });
+});
+</script>
+<% end %>
+
+<div id="contents">
+  <section id="side"><%= render 'side_section' %></section>
+  <section id="main"><%= render 'main_section' %></section>
+</div>

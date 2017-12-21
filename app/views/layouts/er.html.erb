@@ -1,0 +1,63 @@
+<!doctype html>
+<!--
+WWW SQL Designer, (C) 2005-2015 Ondrej Zara, ondras@zarovi.cz
+Version: 2.7
+See license.txt for licencing information.
+-->
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1" />
+    <meta charset="utf-8" />
+
+    <%= stylesheet_link_tag 'jquery-contextmenu-common/fixed/jquery.contextMenu.min' %>
+    <%= stylesheet_link_tag 'jquery-contextmenu-common/jquery.contextMenuCommon.min' %>
+    
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,700">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <%= stylesheet_link_tag 'import', media: 'all' %>
+    <%= stylesheet_link_tag 'style', media: 'all' %>
+
+    <%= javascript_include_tag 'application' %>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <%# jQuery Easy UI %>
+    <%= stylesheet_link_tag 'jquery-easyui/default/easyui' %>
+    <%= stylesheet_link_tag 'jquery-easyui/icon' %>
+    <%= javascript_include_tag 'jquery.easyui.min' %>
+
+    <%= javascript_include_tag 'jquery-contextmenu-common/jquery-ui-position.min' %>
+    <%= javascript_include_tag 'jquery-contextmenu-common/fixed/jquery.contextMenu.min' %>
+    <%= javascript_include_tag 'jquery-contextmenu-common/jquery.contextMenuCommon.min' %>
+
+    <%# jQuery Enhanced Splitter %>
+    <%= stylesheet_link_tag 'jquery.enhsplitter' %>
+    <%= javascript_include_tag 'jquery.enhsplitter' %>
+    
+    <%= javascript_include_tag 'er/oz' %>
+    <%= javascript_include_tag 'er/config' %>
+    <%= javascript_include_tag 'er/globals' %>
+    <%= javascript_include_tag 'er/visual' %>
+    <%= javascript_include_tag 'er/row' %>
+    <%= javascript_include_tag 'er/table' %>
+    <%= javascript_include_tag 'er/relation' %>
+    <%= javascript_include_tag 'er/key' %>
+    <%= javascript_include_tag 'er/rubberband' %>
+    <%= javascript_include_tag 'er/map' %>
+    <%= javascript_include_tag 'er/toggle' %>
+    <%= javascript_include_tag 'er/io' %>
+    <%= javascript_include_tag 'er/tablemanager' %>
+    <%= javascript_include_tag 'er/rowmanager' %>
+    <%= javascript_include_tag 'er/keymanager' %>
+    <%= javascript_include_tag 'er/window' %>
+    <%= javascript_include_tag 'er/options' %>
+    <%= javascript_include_tag 'er/wwwsqldesigner' %>
+    <%= csrf_meta_tags %>
+    <%= yield :head %>
+  </head>
+
+  <body>
+    <%= yield %>
+  </body>
+</html>

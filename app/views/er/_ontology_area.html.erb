@@ -1,0 +1,19 @@
+<div>Class</div>
+<ul id="rdf-class-tree" class="easyui-tree">
+  <%== ontology_tree_html(@owl_classes, @subclass_of, "rdf-class") %>
+</ul>
+
+<div style="margin-top:10px;">Property</div>
+<ul id="rdf-property-tree" class="easyui-tree">
+  <%== ontology_tree_html(@owl_properties, @subproperty_of, "rdf-property") %>
+</ul>
+
+<div style="margin-top:10px;">ObjectProperty</div>
+<ul id="rdf-object-property-tree" class="easyui-tree">
+  <%== ontology_tree_html(@owl_object_properties, @subproperty_of, "rdf-property") %>
+</ul>
+
+<div style="margin-top:10px;">DatatypeProperty</div>
+<ul id="rdf-datatype-property-tree" class="easyui-tree">
+  <%== ontology_tree_html(@owl_datatype_properties, @subproperty_of, "rdf-property") %>
+</ul>

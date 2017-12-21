@@ -1,0 +1,504 @@
+<% content_for :head do %>
+<!--[if IE 6]><link rel="stylesheet" type="text/css" href="styles/ie6.css" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" type="text/css" href="styles/ie7.css" /><![endif]-->
+<link rel="stylesheet" href="styles/print.css" type="text/css" media="print" />
+<%= stylesheet_link_tag 'er' %>
+<%= javascript_include_tag 'er' %>
+<%= javascript_include_tag 'table_joins' %>
+<title>D2RQ Mapper - <%= @work.name %></title>
+<script>
+var d = null;
+
+$(function() {
+  $('#panels').enhsplitter({
+    position: "200px",
+    height: "100vh",
+    minSize: 0,
+    handle: "block",
+    collapse: "left"
+  });
+  
+  var property_bridges = {}
+  <% @class_maps.each do |class_map| %>
+  property_bridges[<%= class_map.id %>] = [<%== @property_bridges[class_map.id].map{ |pb| "{value: '#{pb.id}', label: '#{pb.column_name}'}" }.join(',') %>];
+  <% end %>
+
+  d = new SQL.Designer();
+
+  <% if flash[:msg] %>
+  ER.show_message("<%= j(render partial: 'message_area', locals: { status: 'success', message: flash[:msg] }) %>");
+  $("#er-message").zIndex(10000);
+  <% end %>
+
+  $("#rdf-class-tree").tree("collapseAll");
+  $("#rdf-property-tree").tree("collapseAll");
+  $("#rdf-object-property-tree").tree("collapseAll");
+  $("#rdf-datatype-property-tree").tree("collapseAll");
+
+  $(".rdf-class").draggable({
+    proxy: function(source) {
+      var p = $('<div class="draggable-item"></div>');
+      p.html($(source).html()).appendTo('body');
+      return p;
+    },
+    revert: true,
+    cursor: "move",
+    onBeforeDrag: function(event) {
+    },
+    onStartDrag: function(event) {
+    },
+    onDrag: function(event) {
+    },
+    onStopDrag: function(event) {
+    }
+  });
+
+  $(".rdf-property").draggable({
+    proxy: function(source) {
+      var p = $('<div class="draggable-item"></div>');
+      p.html($(source).html()).appendTo('body');
+      return p;
+    },
+    revert: true,
+    cursor: "move",
+    onBeforeDrag: function(event) {
+    },
+    onStartDrag: function(event) {
+    },
+    onDrag: function(event) {
+    },
+    onStopDrag: function(event) {
+    }
+  });
+
+  $.contextMenuCommon({
+    selector: '.sqldesigner-tablename',
+    callback: function(key, options) {
+      var class_map_id = $(this).attr('data-cmid');
+      if (key == "edit") {
+	//$.getScript('/ajax/er/subject_map_dialog/' + class_map_id);
+	$.getScript('/class_maps/' + class_map_id);
+      } else if (key == "toggle") {
+        var id = options.$trigger.attr("id");
+        $.ajax({
+          url: "/class_maps/" + class_map_id + "/toggle_enable",
+          type: 'POST',
+	  data: "_method=PATCH",
+          success: function(data) {
+	    var table = d.findNamedTable(id);
+            if ($("#" + id).hasClass("disable")) {
+              $("#" + id).removeClass("disable");
+	      table.enable = true;
+            } else {
+              $("#" + id).addClass("disable");
+	      table.enable = false;
+            }
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("error");
+          }
+        });
+      } else if (key == "records") {
+	var url = '/subject_maps/' + class_map_id + '/records';
+	window.open(url, "example_records_" + class_map_id, "width=700,height=700,scrollbars=yes");
+      } else if (key == "mapping") {
+	var url = '/d2rq_mapping/' + class_map_id + '/by_table';
+        window.open(url, "d2rq_mapping", "width=700,height=700,scrollbars=yes");
+      } else if (key == "rdf") {
+	var url = '/turtle/' + class_map_id + '/by_table';
+        window.open(url, "turtle", "width=700,height=700,scrollbars=yes");
+      }
+    },
+    items: {
+      "edit":    {name: "Edit subject mapping"},
+      "toggle":  {name: "Include or exclude from mapping"},
+      "records": {name: "Show table records"},
+      "mapping": {name: "Show D2RQ Mapping of this table"},
+      "rdf":     {name: "Show Turtle of this table"}
+    }
+  });
+
+  $.contextMenuCommon({
+    selector: '.sqldesigner-column-row',
+    callback: function(key, options) {
+      var property_bridge_id = $(this).attr('data-pbid');
+      if (key == "edit") {
+	//$.getScript('/ajax/er/predicate_object_map_dialog/' + property_bridge_id + '/edit');
+	$.getScript('/property_bridges/' + property_bridge_id);
+      } else if (key == "new") {
+	$.getScript('/ajax/er/predicate_object_map_dialog/' + property_bridge_id + '/new');
+      } else if (key == "toggle") {
+	var id = options.$trigger.attr("id");
+        var row_name = options.$trigger.attr("data-rowname");
+	var table_elem = $(this).siblings("thead")[0];
+	var table = d.findNamedTable($(table_elem).attr("id"));
+        $.ajax({
+          url: "/property_bridges/" + property_bridge_id + "/toggle_enable",
+          method: 'POST',
+          success: function(data) {
+	    var row = table.findNamedRow(row_name);
+            if ($("#" + id).hasClass("disable")) {
+              $("#" + id).removeClass("disable");
+	      row.enable = true;
+            } else {
+              $("#" + id).addClass("disable");
+	      row.enable = false;
+            }
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("error");
+          }
+	});
+      } else if (key == "mapping") {
+	var url = '/d2rq_mapping/' + property_bridge_id + '/by_column';
+        window.open(url, "d2rq_mapping", "width=700,height=700,scrollbars=yes");
+      } else if (key == "rdf") {
+	var url = '/turtle/' + property_bridge_id + '/by_column';
+        window.open(url, "turtle", "width=700,height=700,scrollbars=yes");
+      }
+    },
+    items: {
+      "edit":    { name: "Edit predicate-object mapping" },
+      "new":     { name: "New predicate-object mapping" },
+      "toggle":  { name: "Include or exclude from mapping" },
+      "mapping": { name: "Show D2RQ Mapping of this column" },
+      "rdf":     { name: "Show Turtle of this column" }
+    }
+  });
+
+  $.contextMenuCommon({
+    selector: 'path.relation',
+    callback: function(key, options) {
+      var table_join_id = $(this).attr('data-joinid');
+      if (key == "edit_cm") {
+	$.getScript("/ajax/er/table_join_dialog/" + table_join_id + "/subject");
+      } else if (key == "edit_pb") {
+	$.getScript("/ajax/er/table_join_dialog/" + table_join_id + "/predicate-object");
+      } else if (key == "mapping") {
+	var url = '/d2rq_mapping/' + table_join_id + '/by_table_join';
+        window.open(url, "d2rq_mapping", "width=700,height=700,scrollbars=yes");
+      } else if (key == "turtle") {
+	var url = '/turtle/' + table_join_id + '/by_table_join';
+        window.open(url, "turtle", "width=700,height=700,scrollbars=yes");
+      }
+    },
+    items: {
+      "edit_cm": {name: "Edit subject mapping"},
+      "edit_pb": {name: "Edit Predicate-Object mapping"},
+      "mapping": {name: "Show D2RQ Mapping of this join"},
+      "turtle":  {name: "Show Turtle of this join"}
+    }
+  });
+
+  TableJoin.bind_ui(property_bridges);
+
+  $("#modal-join").draggable({
+    handle: "#add-join-dialog-header"
+  });
+
+  $("#up-ontology-ns-add-btn").click(function() {
+    $("#up-ontology-ns-forms").append("<%= j(render partial: 'upload_ontology_ns_form', locals: { del_btn: true }) %>");
+    $(".upload-ontology-ns-btn-delete").unbind("click");
+    $(".upload-ontology-ns-btn-delete").bind("click", function() {
+      $(this).parent().remove();
+    });
+  });
+});
+</script>
+<% end %>
+
+
+<div id="panels">
+  <div id="ontology">
+    <%= render 'ontology_area' %>
+  </div>
+  <div id="area">
+  </div>
+</div>
+
+<div id="controls">
+  <div id="bar">
+    <div id="toggle"></div>
+
+    <input type="button" id="saveload" />
+    <input type="button" id="aligntables" />
+
+    <hr/>
+
+    <input type="button" id="uploadontology" />
+    <input type="button" id="namespaces" />
+    <input type="button" id="tablejoin" />
+
+    <hr />
+
+    <input type="button" id="d2rqmapping" />
+    <input type="button" id="r2rmlmapping" />
+    <input type="button" id="dumpedturtle" />
+
+<!--
+    <hr/>
+-->
+<div style="display:none;">
+    <input type="button" id="aligntables" />
+    <input type="button" id="addtable" />
+    <input type="button" id="edittable" />
+    <input type="button" id="tablekeys" />
+    <input type="button" id="removetable" />
+    <input type="button" id="cleartables" />
+    
+    <!-- <hr/> -->
+    
+    <input type="button" id="addrow" />
+    <input type="button" id="editrow" />
+    <input type="button" id="uprow" class="small" /><input type="button" id="downrow" class="small"/>
+    <input type="button" id="foreigncreate" />
+    <input type="button" id="foreignconnect" />
+    <input type="button" id="foreigndisconnect" />
+    <input type="button" id="removerow" />
+    
+    <!-- <hr/> -->
+    
+    <input type="button" id="options" />
+
+    <!--
+    <a href="https://github.com/ondras/wwwsqldesigner/wiki" target="_blank"><input type="button" id="docs" value="" /></a>
+    -->
+</div>
+
+    <hr />
+    <a href="<%= menu_path(@work) %>"><input type="button" id="menu" value="" /></a>
+  </div>
+  
+  <div id="rubberband"></div>
+  <div id="minimap"></div>
+  <div id="background"></div>
+
+  <!-- popup dialog -->
+  <div id="window">
+    <div id="windowtitle">
+      <img id="throbber" src="images/throbber.gif" alt="" title="" />
+    </div>
+    <div id="windowcontent"></div>
+    <input type="button" id="windowok" />
+    <input type="button" id="windowcancel" />
+  </div>
+
+</div> <!-- #controls -->
+
+<div id="opts">
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          * <label id="language" for="optionlocale"></label>
+        </td>
+        <td>
+          <select id="optionlocale"><option></option></select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          * <label id="db" for="optiondb"></label> 
+        </td>
+        <td>
+          <select id="optiondb"><option></option></select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label id="snap" for="optionsnap"></label> 
+        </td>
+        <td>
+          <input type="text" size="4" id="optionsnap" />
+          <span class="small" id="optionsnapnotice"></span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label id="pattern" for="optionpattern"></label> 
+        </td>
+        <td>
+          <input type="text" size="6" id="optionpattern" />
+          <span class="small" id="optionpatternnotice"></span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label id="hide" for="optionhide"></label> 
+        </td>
+        <td>
+          <input type="checkbox" id="optionhide" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          * <label id="vector" for="optionvector"></label> 
+        </td>
+        <td>
+          <input type="checkbox" id="optionvector" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          * <label id="showsize" for="optionshowsize"></label> 
+        </td>
+        <td>
+          <input type="checkbox" id="optionshowsize" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          * <label id="showtype" for="optionshowtype"></label> 
+        </td>
+        <td>
+          <input type="checkbox" id="optionshowtype" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr />
+
+  * <span class="small" id="optionsnotice"></span>
+</div> <!-- #opts -->
+
+<!-- Save / Load dialog (container) -->
+<div id="io">
+  <table>
+    <tbody>
+      <tr>
+	<!-- client -->
+        <td style="width:60%">
+          <fieldset>
+            <legend id="client"></legend>
+            <div id="singlerow">
+              <input type="button" id="clientsave" /> 
+              <input type="button" id="clientload" />
+            </div>
+            <div id="singlerow">
+              <input type="button" id="clientlocalsave" />
+              <input type="button" id="clientlocalload" />
+              <input type="button" id="clientlocallist" />
+            </div>
+            <div id="singlerow">
+              <input type="button" id="dropboxsave" /><!-- may get hidden by dropBoxInit() -->
+              <input type="button" id="dropboxload" /><!-- may get hidden by dropBoxInit() -->
+              <input type="button" id="dropboxlist" /><!-- may get hidden by dropBoxInit() -->
+            </div>
+            <hr/>
+            <input type="button" id="clientsql" />
+          </fieldset>
+        </td>
+	<!-- server -->
+        <td style="width:40%">
+          <fieldset>
+            <legend id="server"></legend>
+            <label for="backend" id="backendlabel"></label>
+	    <select id="backend">
+	      <option></option>
+	    </select>
+            <hr/>
+            <input type="button" id="serversave" /> 
+            <input type="button" id="quicksave" /> 
+            <input type="button" id="serverload" /> 
+            <input type="button" id="serverlist" /> 
+            <input type="button" id="serverimport" /> 
+          </fieldset>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <fieldset>
+            <legend id="output"></legend>
+            <textarea id="textarea" rows="1" cols="1"></textarea><!--modified by javascript later-->
+          </fieldset>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div> <!-- #io -->
+
+<div id="keys">
+  <fieldset>
+    <legend id="keyslistlabel"></legend> 
+    <select id="keyslist"><option></option></select>
+    <input type="button" id="keyadd" />
+    <input type="button" id="keyremove" />
+  </fieldset>
+  <fieldset>
+    <legend id="keyedit"></legend>
+    <table>
+      <tbody>
+        <tr>
+          <td>
+            <label for="keytype" id="keytypelabel"></label>
+            <select id="keytype"><option></option></select>
+          </td>
+          <td></td>
+          <td>
+            <label for="keyname" id="keynamelabel"></label>
+            <input type="text" id="keyname" size="10" />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3"><hr/></td>
+        </tr>
+        <tr>
+          <td>
+            <label for="keyfields" id="keyfieldslabel"></label><br/>
+            <select id="keyfields" size="5" multiple="multiple"><option></option></select>
+          </td>
+          <td>
+            <input type="button" id="keyleft" value="&lt;&lt;" /><br/>
+            <input type="button" id="keyright" value="&gt;&gt;" /><br/>
+          </td>
+          <td>
+            <label for="keyavail" id="keyavaillabel"></label><br/>
+            <select id="keyavail" size="5" multiple="multiple"><option></option></select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </fieldset>
+</div> <!-- #keys -->
+
+<div id="table">
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <label id="tablenamelabel" for="tablename"></label>
+        </td>
+        <td>
+          <input id="tablename" type="text" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label id="tablecommentlabel" for="tablecomment"></label> 
+        </td>
+        <td>
+          <textarea rows="5" cols="40" id="tablecomment"></textarea>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div> <!-- #table -->
+
+<%# -- Modal dialog for Subject Mapping %>
+<div class="modal" id="staticModalSubjectMap" tabindex="-1" role="dialog" aria-labelledby="staticModalSubjectMapLabel" aria-hidden="true" data-show="true" data-keyboard="false" data-backdrop="false"></div>
+
+<%# -- Modal dialog for Predicate-Obejct Mapping %>
+<div class="modal" id="staticModalPredicateObjectMap" tabindex="-1" role="dialog" aria-labelledby="staticModalPredicateObjectMapLabel" aria-hidden="true" data-show="true" data-keyboard="false" data-backdrop="false"></div>
+
+<%# -- Modal dialog for Join Setting (SubjectMap, Predicate-ObjectMap %>
+<div class="modal" id="staticModalJoinMap" tabindex="-1" role="dialog" aria-labelledby="staticModalJoinMapLabel" aria-hidden="true" data-show="true" data-keyboard="false" data-backdrop="false"></div>
+
+<%# -- Modal dialog for confirm saving table position %>
+<div class="modal" id="confirm-dialog" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-show="true" data-keyboard="false" data-backdrop="static"></div>
+
+<%# -- File upload dialog %>
+<%= render partial: 'ontology_upload_dialog' %>
+
+<%# -- Add Join dialog %>
+<%= render partial: 'table_joins/table_join_dialog', locals: { page: 'er' } %>

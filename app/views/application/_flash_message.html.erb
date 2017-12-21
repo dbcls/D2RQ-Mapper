@@ -1,0 +1,11 @@
+<% if flash[:msg] -%>
+  <%= render partial: 'success_message', locals: { message: flash[:msg] } %>
+<% end -%>
+<% if flash[:notice] -%>
+  <% if flash[:notice] != 'Signed in successfully.' %>
+    <%= render partial: 'notice_message', locals: { message: flash[:notice] } %>
+  <% end %>
+<% end -%>
+<% if flash[:err] -%>
+  <%= render partial: 'alert_message', locals: { message: flash[:err] } %>
+<% end -%>

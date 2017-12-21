@@ -1,0 +1,26 @@
+<div class="panel panel-triple subject">
+
+  <div class="panel-heading">
+    <h3>
+      <span class="icon-set bg-primary">S</span>ubject: Blank node
+    </h3>
+  </div>
+
+  <div class="panel-body">
+
+    <div class="form-group subject-group required">
+      <label for="subject-type" class="col-sm-2 control-label">Column</label>
+      <div id="subject-expression" class="col-sm-9">
+	<%= render 'subject_bnode' %>
+      </div>
+    </div>
+
+    <%# == rdf:type == %>
+    <div id="subject-rdf-type-wrapper">
+      <% @class_map_property_setting[:rdf_type].each_with_index do |rdf_type_cmps, i| %>
+	<%= render(partial: "subject_rdf_type_form",
+		   locals: { rdf_type_cmps: rdf_type_cmps, base_uri: @base_uri, first: i == 0 }) %>
+      <% end %>
+    </div>
+  </div>
+</div>

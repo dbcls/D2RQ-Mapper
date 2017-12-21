@@ -1,0 +1,4 @@
+<% property_bridge = new_pb_instance %>
+<%== render(partial: 'property_bridge_form_for_add',
+	    locals: {property_bridge: property_bridge,
+		     property_bridge_property_setting: new_pbps_hash(property_bridge.id)}) %>

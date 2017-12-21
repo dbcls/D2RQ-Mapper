@@ -1,0 +1,80 @@
+<% prefix ||= '' %>
+<div class="form-group required subject-group">
+  <label for="<%= prefix %>subject-format-selector" class="col-sm-2 control-label">Format</label>
+  <div class="col-sm-9">
+    <%= select_tag("class_map_property_setting[#{@subject_cmps.id}][class_map_property_id]",
+		   options_for_select(ClassMapProperty.for_resource_identity.map{ |cmp| [ cmp.label, cmp.id ] },
+				      @subject_cmps.class_map_property_id),
+		   id: "#{prefix}subject-format-selector",
+		   class: "form-control")%>
+  </div>
+  <%= render(partial: 'tooltip_icon',
+	     locals: { title: %Q|[Required]<br /> * URI pattern: Construct a subject URI starting with http://〜 or namespace:〜 (the namespace name must be registered in the &quot;Namespaces&quot; setting).<br /> * URI column: Treat values of a specified column as subject URIs (Use only if cell values of a specified column are already stored as URIs).| }) %>
+</div>
+
+<div class="form-group required">
+  <label for="<%= prefix %>subject-uri-pattern" class="col-sm-2 control-label">URI</label>
+  <div id="<%= prefix %>subject-expression" class="col-sm-9">
+    <%= text_field_tag("class_map_property_setting[#{@subject_cmps.id}][d2rq:uriPattern][value]",
+		       @subject_cmps.value,
+		       id: "#{prefix}subject-uri-pattern",
+		       class: "form-control",
+		       style: "display:none;") %>
+    <%= select_tag("class_map_property_setting[#{@subject_cmps.id}][d2rq:uriColumn][value]",
+		   options_for_select(@class_map.property_bridges_for_column.map{ |pb| [ pb.column_name, "#{pb.class_map.table_name}.#{pb.column_name}" ] },
+				      @subject_cmps.value),
+		   id: "#{prefix}subject-uri-column",
+		   class: "form-control",
+		   style: "display:none;") %>
+  </div>
+  <%= render(partial: 'tooltip_icon',
+	     locals: { title: %Q|* URI pattern: [Required] Specify a template URI using a special variable @@table_name.column_name@@ (combination of a table name and a column name to take a cell's value).<br />* URI column: [Required] Specify a column containing subject URIs.| }) %>
+</div>
+
+<div id="<%= prefix %>subject-rdf-type-wrapper">
+  <% @rdf_type_cmps.each_with_index do |cmps, i| %>
+    <% if i == 0 %>
+      <div class="form-group required">
+	<label for="<%= prefix %>subject-rdf-type" class="col-sm-2 control-label">Class (rdf:type)</label>
+	<div id="subject-expression" class="col-sm-9">
+	  <%= text_field_tag("class_map_property_setting[#{cmps.id}][value]",
+			     cmps.value,
+			     id: "#{prefix}subject-rdf-type-#{cmps.id}",
+			     class: "form-control") %>
+	</div>
+      </div>
+    <% else %>
+      <%= render partial: 'new_class_form', locals: { value: cmps.value, prefix: prefix } %>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="form-group" id="<%= prefix %>resource-label-object_<%= @resource_label_pbps.id %>">
+  <span class="required"><label for="<%= prefix %>resource-label-object_<%= @resource_label_pbps.id %>" class="col-sm-2 control-label">rdfs:label</label></span>
+  <div class="col-sm-6">
+    <%= text_field_tag("property_bridge_property_setting[#{@resource_label_pbps.id}][value]",
+		       @resource_label_pbps.value,
+		       id: "#{prefix}resource-label-object_#{@resource_label_pbps.id}",
+		       class: "form-control input-sm") %>
+  </div>
+
+  <label for="<%= prefix %>resource-label-lang_<%= @resource_label_lang_pbps.id %>" class="col-sm-2 control-label">Language</label>
+  <div class="col-sm-1">
+    <%= text_field_tag("property_bridge_property_setting[#{@resource_label_lang_pbps.id}][value]",
+		       @resource_label_lang_pbps.value,
+		       id: "#{prefix}resource-label-lang_#{@resource_label_lang_pbps.id}",
+		       class: "form-control input-sm") %>
+  </div>
+</div>
+
+<div class="form-group">
+  <label for="<%= prefix %>subject-where-condition" class="col-sm-2 control-label">WHERE condition</label>
+  <div class="col-sm-9">
+    <%= text_field_tag("class_map_property_setting[#{@condition_cmps.id}][value]",
+		       @condition_cmps.value,
+		       id: "#{prefix}subject-where-condition",
+		       class: "form-control") %>
+  </div>
+  <%= render(partial: 'tooltip_icon',
+	     locals: { title: %Q|Specifies an SQL WHERE condition. RDF triples will only be generated for database rows that satisfy the condition.| }) %>
+</div>

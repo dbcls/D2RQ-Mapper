@@ -1,0 +1,16 @@
+<div class="modal fade" id="delete-join-confirm-dialog-<%= table_join.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title" id="myModalLabel">Are you sure you want to delete join ?</h4>
+      </div>
+      <div class="modal-footer">
+	<%= button_tag 'Close', type: 'button', class: 'btn btn-default', data: { dismiss: 'modal' } %>
+	<%= link_to table_join, method: :delete do %>
+	  <%= button_tag 'Delete join', type: 'button', class: 'btn btn-danger', id: 'delete-join-btn' %>
+	<% end %>
+      </div>
+    </div>
+  </div>
+</div>

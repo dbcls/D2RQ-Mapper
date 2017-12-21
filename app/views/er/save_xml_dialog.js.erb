@@ -1,0 +1,14 @@
+$("#confirm-dialog").html("<%= j render(partial: 'save_xml_dialog') %>");
+$("#save-xml-dialog-submit").click(function() {
+  var json = d.toJSON();
+  $.ajax({
+    url: "<%= er_data_work_path(@work) %>",
+    method: "POST",
+    data: "json=" + json,
+    dataType: "script",
+    success: function(data, dataType) {
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+    }
+  });
+});

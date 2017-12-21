@@ -1,0 +1,39 @@
+<div id="contents">
+
+  <section id="side">
+    <div class="menu">
+      <h1 class="heading-user-account">User account</h1>
+      <ul class="btn-set">
+        <li class="current"><%= link_to 'Login', new_user_session_path, class: "btn btn-primary btn-block" %></li>
+        <li><%= link_to 'Sing up', new_user_registration_path, class: "btn btn-default btn-block" %></li>
+        <li><%= link_to 'Edit profile', edit_user_registration_path, class:"btn btn-default btn-block disabled" %></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="main">
+    <%= form_tag password_resets_path, method: :post, class: "form-horizontal" do %>
+        <h1 class="heading01">Reset your password</h1>
+        <% if notice %>
+            <%= render partial: 'info_message', locals: { message: notice } %>
+        <% else %>
+            <% if alert %>
+                <%= render partial: 'alert_message', locals: { message: alert } %>
+            <% end %>
+            <div style="margin-bottom: 15px; font-weight: bold;">Enter your email address and we will send you a link to reset your password.</div>
+            <div class="form-group required">
+              <%= label_tag :email, nil, class: "col-sm-2 control-label" %>
+              <div class="col-sm-9">
+                <%= text_field_tag :email, params[:email], class: "form-control", placeholder: "Enter your email address" %>
+              </div>
+            </div>
+            <div class="submit form-group">
+              <%= button_tag class: "btn btn-primary", style: "width: 300px;" do %>
+                Send password reset email
+              <% end %>
+            </div>
+        <% end %>
+    <% end %>
+  </section>
+
+</div>

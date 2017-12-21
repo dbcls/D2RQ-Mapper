@@ -1,0 +1,119 @@
+<% content_for :head do %>
+<title>D2RQ Mapper</title>
+<script>
+<% if @work %>
+  var work_id = "<%= @work.id %>";
+<% else %>
+  var work_id = "";
+<% end %>
+
+$(function() {
+  $("#new-mapping-btn").click(function() {
+    location.href = "<%= new_work_path %>";
+  });
+
+  $("ul.existing li").click(function(event) {
+    event.stopPropagation();
+    
+    $("#menu-edit-mapping").addClass("disabled");
+    $("#menu-graph-database").addClass("disabled-after");
+    $("button").attr("disabled", "disabled");
+
+    work_id = $(this).attr("data-workid");
+    
+    $("ul.existing li").removeClass("checked");
+    $(this).addClass("checked");
+    
+    $("#menu-edit-mapping").removeClass("disabled");
+    $("#menu-graph-database").removeClass("disabled-after");
+    $("button").removeAttr("disabled");
+  });
+
+  $("ul.existing li button").click(function(event) {
+    event.stopPropagation();
+  });
+
+  $("#edit-mapping-tables").click(function() {
+    location.href = "<%= subject_maps_path %>/" + work_id;
+  });
+
+  $("#edit-mapping-configure").click(function() {
+    location.href = "<%= configure_mapping_path %>?id=" + work_id;
+  });
+
+  $("#edit-mapping-namespace").click(function() {
+    location.href = "<%= namespaces_path %>/" + work_id;
+  });
+
+  $("#edit-mapping-er").click(function() {
+    location.href = "<%= er_index_path %>/" + work_id;
+  });
+
+  $("#graph-database-d2rq").click(function() {
+    location.href = "<%= d2rq_mapping_index_path %>/" + work_id;
+  });
+
+  $("#graph-database-r2rml").click(function() {
+    location.href = "<%= r2rml_mapping_index_path %>/" + work_id;
+  });
+
+  $("#graph-database-rdf").click(function() {
+    location.href = "<%= turtle_index_path %>/" + work_id;
+  });
+
+  $("#graph-database-sparql").click(function() {
+    location.href = "<%= sparql_index_path %>/" + work_id;
+  });
+  
+<% if flash[:error] %>
+  $("#error-message").text("<%== j flash[:error] %>");
+  $("#error-dialog").modal();
+  <%# = render partial: 'alert_message', locals: { message: flash[:error] } %>
+<% end %>
+});
+</script>
+<% end %>
+
+<div id="contents">
+  <div class="menu-view">
+    <div class="menu-box">
+      <div class="menu">
+	<%= render 'configure' %>
+      </div>
+    </div>
+    <div id="menu-edit-mapping" class="menu-box<% if @work.nil? %> disabled<% end %>">
+      <div class="menu">
+	<%= render 'mapping' %>
+      </div>
+    </div>
+    <div id="menu-graph-database" class="menu-box<% if @work.nil? %> disabled-after<% end %>">
+      <div class="menu">
+	<%= render 'graph' %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# -- Modal dialog for Error %>
+<div class="modal" id="error-dialog" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-show="true" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&#215;</span><span class="sr-only">Close</span>
+	</button>
+	<h4 class="modal-title">Error</h4>
+      </div><!-- /modal-header -->
+
+      <div class="modal-body">
+	<div id="error-message"></div>
+      </div> <!-- /.modal-body -->
+
+      <div class="modal-footer">
+	<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+      </div> <!-- /.modal-footer -->
+
+    </div> <!-- /.modal-content -->
+  </div> <!-- /.modal-dialog -->
+</div>

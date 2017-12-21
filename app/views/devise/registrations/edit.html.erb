@@ -1,0 +1,92 @@
+<% content_for :head do %>
+  <title>Edit user account | D2RQ Mapper</title>
+  <script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+    $('body').addClass('user-edit');
+    });
+  </script>
+<% end %>
+
+<div id="contents">
+  <section id="side">
+    <div class="menu">
+      <h1 class="haeding-user-account">User account</h1>
+      <ul class="btn-set">
+	<li><%= link_to 'Login', new_user_session_path, class: "btn btn-default btn-block" %></li>
+	<li><%= link_to 'Sing up', new_user_registration_path, class: "btn btn-default btn-block disabled" %></li>
+	<li class="current"><%= link_to 'Edit profile', edit_user_registration_path, class:"btn btn-primary btn-block" %></li>
+      </ul>
+    </div>
+  </section>
+  <section id="main">
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "form-horizontal" }) do |f| %>
+      <h1 class="heading01">Edit profile</h1>
+      <%= devise_error_messages! %>
+
+      <div class="form-group">
+	<%= f.label :username, class: "col-sm-2 control-label" %>
+	<div class="col-sm-9">
+	  <%= f.text_field :username, autofocus: true, class: "form-control" %>
+	</div>
+      </div>
+
+      <div class="form-group">
+	<%= f.label :email, class: "col-sm-2 control-label" %>
+	<div class="col-sm-9">
+	  <%= f.email_field :email, class: "form-control" %>
+	</div>
+      </div>
+
+      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+	<div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+      <% end %>
+
+      <div class="form-group">
+	<%= f.label :password, class: "col-sm-2 control-label" %>
+	<div class="col-sm-9">
+	  <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
+	  <p><small>leave blank if you don't want to change it</small></p>
+	</div>
+      </div>
+
+      <div class="form-group">
+	<%= f.label :password_confirmation, class: "col-sm-2 control-label" %>
+	<div class="col-sm-9">
+	  <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
+	</div>
+      </div>
+
+      <div class="form-group">
+	<%= f.label :current_password, class: "col-sm-2 control-label" %>
+	<div class="col-sm-9">
+	  <%= f.password_field :current_password, autocomplete: "off", class: "form-control" %>
+	  <p><small>we need your current password to confirm your changes</small></p>
+	</div>
+      </div>
+
+      <div class="submit form-group">
+	<button type="submit" class="btn btn-primary" name="commit"><i class="fa fa-sign-in"></i>Update</button>
+	<button type="button" class="btn btn-danger" name="delete" data-toggle="modal" data-target="#deleteUserAccountConfirmModal"><i class="fa fa-sign-in"></i>Delete my account</button>
+      </div>
+    <% end %>
+
+    <!-- confirm dialog for delete multiple tables join -->
+    <div class="modal fade" id="deleteUserAccountConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    <h4 class="modal-title" id="myModalLabel">Are you sure you want to delete your account ?</h4>
+	  </div>
+	  <div class="modal-footer">
+	    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :delete, class: "form-horizontal" }) do |f| %>
+	      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      <button type="submit" class="btn btn-danger">Delete account</button>
+	    <% end %>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </section>
+</div>

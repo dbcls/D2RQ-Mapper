@@ -1,0 +1,26 @@
+<%= form_tag(class_map_path(@class_map), remote: true, method: :patch, class: "form-horizontal") do %>
+<div class="modal-dialog modal-lg">
+  <div id="subject-map-dialog" class="modal-content">
+
+    <div id="subject-map-dialog-header" class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">&#215;</span><span class="sr-only">Close</span>
+      </button>
+      <h4 class="modal-title">Subject Mapping: <%= @class_map.table_name %> <button type="button" id="add-subject-class-btn" class="btn btn-primary" style="margin-left:20px;"><i class="fa fa-plus"></i> Add Class form</button>
+</h4>
+    </div><!-- /.modal-header -->
+
+    <div id="subject-map-dialog-body" class="modal-body">
+      <div id="subject-map-errors" style="display:none;"></div>
+      <%= render partial: 'body' %>
+      <div id="subject-mapping-message"></div>
+    </div> <!-- /.modal-body -->
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div> <!-- /.modal-footer -->
+
+  </div> <!-- /.modal-content -->
+</div> <!-- /.modal-dialog -->
+<% end %>

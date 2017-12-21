@@ -1,0 +1,72 @@
+<% content_for :head do %>
+<title>Login | D2RQ Mapper</title>
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+  $('body').addClass('page-login');
+
+  $("#cancel-btn").click(function() {
+    location.href = "<%= root_path %>";
+  });
+});
+</script>
+<% end %>
+
+<div id="contents">
+  <section id="side">
+    <div class="menu">
+      <h1 class="haeding-user-account">User account</h1>
+      <ul class="btn-set">
+	      <li class="current"><%= link_to 'Login', new_user_session_path, class: "btn btn-primary btn-block" %></li>
+	      <li><%= link_to 'Sing up', new_user_registration_path, class: "btn btn-default btn-block" %></li>
+	      <li><%= link_to 'Edit profile', edit_user_registration_path, class:"btn btn-default btn-block disabled" %></li>
+      </ul>
+    </div>
+  </section>
+  <section id="main">
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "form-horizontal" }) do |f| %>
+      <h1 class="heading01">Log in</h1>
+
+      <% if alert %>
+        <%= render partial: 'shared/alert_message', locals: { message: alert } %>
+      <% end %>
+      <% if notice %>
+        <%= render partial: 'info_message', locals: { message: notice } %>
+      <% end %>
+
+      <div class="form-group">
+	      <%= f.label :username, class: "col-sm-2 control-label" %>
+	      <div class="col-sm-9">
+	        <%= f.text_field :username, autofocus: true, class: "form-control" %>
+	      </div>
+	      <%#= render partial: 'shared/tooltip_icon', locals: { title: 'Some tooltip text!' } %>
+      </div>
+
+      <div class="form-group">
+	      <%= f.label :password, class: "col-sm-2 control-label" %>
+	      <div class="col-sm-9">
+	        <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
+          <%= link_to "Forgot password?", new_password_reset_path %>
+	      </div>
+	      <%#= render partial: 'shared/tooltip_icon', locals: { title: 'Some tooltip text!' } %>
+      </div>
+
+      <% if devise_mapping.rememberable? %>
+	      <div class="form-group">
+	        <div class="col-sm-offset-2 col-sm-10">
+	          <div class="checkbox">
+	            <%= f.label :remember_me do %>
+		            <%= f.check_box :remember_me %> Remember me
+	            <% end -%>
+            </div>
+	        </div>
+	      </div>
+      <% end %>
+
+      <div class="submit form-group">
+	<button type="submit" class="btn btn-primary" name="commit"><i class="fa fa-sign-in"></i>Log in</button>
+	<button type="button" class="btn btn-default" name="cancel" id="cancel-btn"><i class="fa fa-times"></i>Cancel</button>
+      </div>
+    <% end -%>
+  </section>
+</div>

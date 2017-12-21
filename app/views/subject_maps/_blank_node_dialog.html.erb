@@ -1,0 +1,27 @@
+<div class="modal fade" id="modal-bnode">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title">Blank node</h4>
+      </div>
+      <div class="modal-body">
+	<div class="bnode-edit-view">
+	  <%= form_tag blank_nodes_path do %>
+	    <%= hidden_field_tag :work_id, @work.id %>
+	    <div class="form-group">
+	      Table: <%= select_tag 'class_map_id', options_for_select(@class_maps.map{ |cm| [cm.table_name, cm.id] }), id: "bnode-table", class: "form-control" %>
+	    </div>
+	    <div class="form-group">
+	      Colulmn: <%= select_tag 'property_bridge_id', options_for_select(@property_bridges[@class_maps[0].id].map{ |pb| [pb.column_name, pb.id] }), id: "bnode-column", class: "form-control" %>
+	    </div>
+	    <div class="modal-footer">
+	      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      <button type="submit" class="btn btn-primary">Add blank node</button>
+	    </div>
+	  <% end %>
+	</div>
+      </div>
+    </div>
+  </div>
+</div>

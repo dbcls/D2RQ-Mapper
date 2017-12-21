@@ -1,0 +1,18 @@
+<%
+property = 'd2rq:uriPattern'
+
+name = "property_bridge_property_setting[#{property_bridge_property_setting[:object].id}][#{property}][value]"
+
+if @object_value[property_bridge.id]
+  value = @object_value[property_bridge.id][property] == "" ? "" : uri_for_disp(@base_uri, @namespace_prefixes, @object_value[property_bridge.id][property])
+else
+  value = ""
+end
+
+html_opts = { id: "object-uri-pattern-#{property_bridge.id }", class: "form-control" }
+unless disp
+  html_opts[:style] = "display:none;"
+end
+%>
+
+<%= text_field_tag(name, value, html_opts) %>

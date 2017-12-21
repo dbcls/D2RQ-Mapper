@@ -1,0 +1,55 @@
+<table class="table" id="table-list">
+
+  <% if @class_maps.empty? %>
+    <tr>
+      <th>No tables.</th>
+      <td>
+      </td>
+    </tr>
+  <% else %>
+  <% @class_maps.each do |class_map| %>
+    <tr<% unless class_map.enable %> class="disabled"<% end %>>
+      <th><i class="fa fa-table"></i><%= class_map.table_name %></th>
+      <td>
+	<button type="button" class="<%= rdf_button_class(class_map) %>" id="rdf-btn-<%= class_map.id %>"></button>
+	<%= link_to triples_map_path(class_map) do %>
+	  <button type="button" class="btn btn-primary"><i class="fa fa-cog"></i> Configure</button>
+	<% end %>
+      </td>
+    </tr>
+  <% end %>
+  <% end %>
+
+  <% @table_joins.each do |table_join| %>
+    <tr<% unless table_join.class_map.enable %> class="disabled"<% end %>>
+      <th>
+	<% if table_join.multiple_join? %>
+	  <i class="fa fa-table"></i><i class="icon-multiple-join"></i><i class="fa fa-table"></i>Joined table (m:n)
+	<% else %>
+	  <i class="fa fa-table"></i><i class="icon-join"></i><i class="fa fa-table"></i>Joined table (1:n)
+	<% end %>
+	<p><small><%= table_join.label %></small></p>
+      </th>
+      <td>
+	<button type="button" class="btn btn-default btn-delete two-tables-join-delete-btn" data-toggle="modal" data-target="#delete-join-confirm-dialog-<%= table_join.id %>" id=two-tables-join-delete-<%= table_join.id %>"><i class="fa fa-trash-o"></i></button>
+	<button type="button" class="<%= rdf_button_class(table_join.class_map) %>" id="rdf-btn-<%= table_join.class_map.id %>"></button>
+	<%= link_to triples_map_path(table_join.class_map) do %><button type="button" class="btn btn-primary"><i class="fa fa-cog"></i> Configure</button><% end %>
+      </td>
+    </tr>
+  <% end %>
+
+  <% @blank_nodes.each do |blank_node| %>
+    <% class_map = ClassMap.where(bnode_id: blank_node.id).first %>
+    <tr<% unless class_map.enable %> class="disabled"<% end %>>
+      <th><i class="fa" style="width:15px;"></i>Blank node: <%= class_map.bnode_id_columns %></th>
+      <td>
+	<button type="button" class="btn btn-default btn-delete bnode-delete-btn" data-toggle="modal" data-target="#delete-bnode-confirm-dialog-<%= blank_node.id %>" id=bnode-delete-<%= blank_node.id %>"><i class="fa fa-trash-o"></i></button>
+	<button type="button" class="<%= rdf_button_class(class_map) %>" id="rdf-btn-<%= class_map.id %>"></button>
+	<%= link_to triples_map_path(class_map) do %>
+	  <button type="button" class="btn btn-primary"><i class="fa fa-cog"></i> Configure</button>
+	<% end %>
+      </td>
+    </tr>
+    </tr>
+  <% end %>
+</table>

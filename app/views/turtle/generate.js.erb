@@ -1,0 +1,14 @@
+<%
+if @turtle_exist
+  message = "Updating turtle ..."
+else
+  message = "Generating turtle ..."
+end
+%>
+
+$("#d2rq-turtle-submit-btn-wrapper").hide();
+$("#d2rq-info-message").hide();
+$("#d2rq-turtle-message").html("<%= message %>");
+$("#d2rq-turtle-message").show();
+
+generation_handler = setInterval("refresh()", 1000);

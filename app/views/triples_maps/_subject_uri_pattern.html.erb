@@ -1,0 +1,7 @@
+<% property = 'd2rq:uriPattern' %>
+<% value = @subject_uri[property] == "" ? "" : uri_for_disp(@base_uri, @namespace_prefixes, @subject_uri[property]) %>
+<%= text_field_tag("class_map_property_setting[#{@class_map_property_setting[:subject].id}][#{property}][value]",
+		   value,
+		   id: "subject-uri-pattern",
+		   class: "form-control",
+		   style: "display:none;") %>

@@ -1,0 +1,36 @@
+<% content_for :head do %>
+<title>SPARQL | D2RQ Mapper</title>
+<%= javascript_include_tag 'sparql' %>
+<script>
+$(function() {
+  var editor = CodeMirror.fromTextArea(document.getElementById("sparql-query"), {
+    mode: "application/sparql-query",
+    matchBrackets: true,
+    lineNumbers: true
+  });
+
+  $('[data-toggle="tooltip"]').tooltip();
+
+  $("#sparql-submit").click(function() {
+    $("#sparql-result").hide();
+    $("#sparql-running-icon").show();
+  });
+});
+</script>
+<% end %>
+
+<% content_for :side do %>
+  <%= render partial: 'graphs/side_menu', locals: { current: 'sparql' } %>
+<% end %>
+
+<h1 class="heading01">SPARQL</h1>
+<div id="sparql_wrapper">
+  <div id="sparql-search-form">
+    <%= render 'search_form' %>
+  </div>
+  
+  <div style="margin-top:20px; padding:5px;">
+    <%= image_tag 'arrow45-010.gif', id: "sparql-running-icon", style: "display:none;" %>
+    <div id="sparql-result" style="display:none;"></div>
+  </div>
+</div>

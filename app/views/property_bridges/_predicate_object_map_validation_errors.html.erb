@@ -1,0 +1,8 @@
+<p class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <i class="fa fa-times-circle"></i>
+  <strong>Alert:</strong> Predicate-Object Mapping was not saved because of the following error<% if @errors.size > 1 %>s<% end %>.<br />
+  <% @errors.each do |error| %>
+    <%= error %><br />
+  <% end %>
+</p>

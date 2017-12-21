@@ -1,0 +1,33 @@
+<% prefix ||= '' %>
+<% if @subject_cmps.class_map_property_id == ClassMapProperty.uri_pattern.id %>
+  $("#<%= prefix %>subject-uri-pattern").val("<%== j(uri_for_disp(@base_uri, @namespace_prefixes, @subject_cmps.value)) %>");
+  $("#<%= prefix %>subject-uri-pattern").show();
+<% elsif @subject_cmps.class_map_property_id == ClassMapProperty.uri_column.id %>
+  $("#<%= prefix %>subject-uri-pattern").val("<%= j(default_resource_uri_pattern(@class_map)) %>");
+  $("#<%= prefix %>subject-uri-column").val("<%= j(@subject_cmps.value) %>");
+  $("#<%= prefix %>subject-uri-column").show();
+<% end %>
+$("#<%= prefix %>add-subject-class-btn").click(function() {
+  $("#<%= prefix %>subject-rdf-type-wrapper").append("<%= j render(partial: 'new_subject_class_form', locals: { value: '' }) %>");
+  $(".subject-del-rdf-type-btn").unbind("click");
+  $(".subject-del-rdf-type-btn").bind("click", function() {
+    $(this).closest("div.form-group").remove();
+  });
+});
+
+$(".subject-del-rdf-type-btn").bind("click", function() {
+  $(this).closest("div.form-group").remove();
+});
+
+$("#<%= prefix %>subject-format-selector").change(function() {
+  var selected = $("#<%= prefix %>subject-format-selector option:selected").val();
+
+  $("#<%= prefix %>subject-uri-pattern").hide();
+  $("#<%= prefix %>subject-uri-column").hide();
+
+  if (selected == "<%= ClassMapProperty.uri_pattern.id %>") {
+    $("#<%= prefix %>subject-uri-pattern").show();
+  } else if (selected == "<%= ClassMapProperty.uri_column.id %>") {
+    $("#<%= prefix %>subject-uri-column").show();
+  }
+});

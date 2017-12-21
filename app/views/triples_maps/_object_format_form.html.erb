@@ -1,0 +1,15 @@
+<label for="tables-join-object-format" class="col-sm-2 control-label">Format</label>
+<div class="col-sm-9">
+  <div class="radio">
+    <% @object_properties.each do |object_property| %>
+      <label>
+	<%= radio_button_tag("property_bridge_property_setting[#{property_bridge_property_setting[:object].id}][property_bridge_property_id]",
+                             object_property.id,
+			     property_bridge_property_setting[:object].property_bridge_property_id == object_property.id,
+			     class: "object-format", "data-pbid" => property_bridge.id ) %>
+	<%= object_property.label %>
+      </label>
+    <% end %>
+  </div>
+</div>
+<%= render partial: 'tooltip_icon', locals: { title: "[Required]<br /> * URI pattern: Specify to construct an object URI based on the cell's value using a special variable @@table_name.column_name@@ (e.g., to make ID as a URI by adding prefix).<br /> * URI column: Specify to treat the cell's value as an object URI.<br /> * Literal pattern: Specify to customize a literal value including the cell's value using a special variable @@table_name.column_name@@ (e.g., to add unit string to numbers).<br /> * Literal column: Specify to use cell's value as a literal object." } %>

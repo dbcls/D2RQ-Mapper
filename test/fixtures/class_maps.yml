@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  work_id: 1
+  map_name: MyString
+  table_name: MyString
+  enable: false
+  table_join_id: 1
+  bnode_id: 1
+  er_xpos: 1
+  er_ypos: 1
+
+two:
+  work_id: 1
+  map_name: MyString
+  table_name: MyString
+  enable: false
+  table_join_id: 1
+  bnode_id: 1
+  er_xpos: 1
+  er_ypos: 1

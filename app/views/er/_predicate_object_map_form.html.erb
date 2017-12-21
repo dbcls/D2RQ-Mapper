@@ -1,0 +1,144 @@
+<%
+prefix ||= ''
+
+if prefix == 'join-'
+  option_tags = grouped_options_for_select([ [@table_join.l_table.table_name, @table_join.l_table.property_bridges_for_column.map { |pb| [ pb.column_name, "#{pb.class_map.table_name}.#{pb.column_name}" ] } ], [@table_join.r_table.table_name, @table_join.r_table.property_bridges_for_column.map { |pb| [ pb.column_name, "#{pb.class_map.table_name}.#{pb.column_name}" ] } ] ], @object_pbps.value)
+else
+  option_tags = options_for_select(@class_map.property_bridges_for_column.map{ |pb| [ pb.column_name, "#{pb.class_map.table_name}.#{pb.column_name}" ] }, @object_pbps.value)
+end
+
+object_literal_value = [PropertyBridgeProperty.uri_pattern.id, PropertyBridgeProperty.literal_pattern.id].include?(@object_pbps.property_bridge_property_id) ? @object_pbps.value : "@@#{@object_pbps.value}@@"
+%>
+<div class="panel panel-triple">
+  <div class="panel-heading">
+    <h3>
+      Predicate
+      <%= button_tag(type: 'button',
+		     id: "#{prefix}add-property-btn",
+		     class: "#{prefix}add-predicate-btn btn btn-primary",
+		     style: "margin-left:20px;",
+		     "data-pbid" => @property_bridge.id) { content_tag(:i, nil, class: ['fa', 'fa-plus']) } %>
+    </h3>
+  </div>
+
+  <div class="panel-body" id="<%= prefix %>predicate-wrapper-<%= @property_bridge.id %>">
+    <% pbps = @predicate_pbps.first %>
+    <div class="form-group required">
+      <label for="predicate_<%= pbps.id %>" class="col-sm-2 control-label" style="width:10%;">URI</label>
+      <div class="col-sm-9">
+	<%= text_field_tag("property_bridge_property_setting[#{pbps.id}][value]",
+			   absolute_uri(@base_uri, pbps.value),
+			   id: "#{prefix}predicate_#{pbps.id}",
+			   class: "form-control",
+			   placeholder: "rdfs:seeAlso") %>
+      </div>
+      <%= render(partial: 'tooltip_icon',
+		 locals: { title: 'URI: Specify a predicate URI to link two tables.' }) %>
+    </div>
+	    
+    <% @predicate_pbps.drop(1).each do |pbps| %>
+      <%= render partial: 'new_property_form', locals: { value: pbps.value, prefix: prefix } %>
+    <% end %>
+    <% if @new_property %>
+      <%= render partial: 'new_property_form', locals: { value: @new_property, prefix: prefix } %>
+    <% end %>
+    
+  </div>
+</div>
+
+<div class="panel panel-triple">
+  <div class="panel-heading">
+    <h3>Object</h3>
+  </div>
+  <div class="panel-body">
+    
+    <div class="form-group required">
+      <label for="<%= prefix %>object-format-selector" class="col-sm-2 control-label">Format</label>
+      <div class="col-sm-9">
+	<%= select_tag("property_bridge_property_setting[#{@object_pbps.id}][property_bridge_property_id]",
+		       options_for_select(PropertyBridgeProperty.object_properties.map{ |pbp| [ pbp.label, pbp.id ] },
+					  @object_pbps.property_bridge_property_id),
+		       id: "#{prefix}object-format-selector",
+		       class: "form-control") %>
+      </div>
+      <%= render(partial: 'tooltip_icon',
+		 locals: { title: "[Required]<br /> * URI pattern: Specify to construct an object URI based on the cell's value using a special variable @@table_name.column_name@@ (e.g., to make ID as a URI by adding prefix).<br /> * URI column: Specify to treat the cell's value as an object URI.<br /> * Literal pattern: Specify to customize a literal value including the cell's value using a special variable @@table_name.column_name@@ (e.g., to add unit string to numbers).<br /> * Literal column: Specify to use cell's value as a literal object." }) %>
+    </div>
+
+    <div class="form-group required">
+      <label for="<%= prefix %>object-format" class="col-sm-2 control-label">URI / Literal</label>
+      <div class="col-sm-9">
+	<%# -- URL pattern -- %>
+	<%= text_field_tag("property_bridge_property_setting[#{@object_pbps.id}][d2rq:uriPattern][value]",
+			   object_literal_value,
+			   id: "#{prefix}object-uri-pattern-#{@property_bridge.id}",
+			   class: "form-control",
+			   style: @object_pbps.property_bridge_property_id != PropertyBridgeProperty.uri_pattern.id ? "display:none;" : nil) %>
+
+	<%# -- URL column -- %>
+	<%= select_tag("property_bridge_property_setting[#{@object_pbps.id}][d2rq:uriColumn][value]",
+		       option_tags,
+		       id: "#{prefix}object-uri-column-#{@property_bridge.id}",
+		       class: "form-control",
+		       style: @object_pbps.property_bridge_property_id != PropertyBridgeProperty.uri_column.id ? "display:none;" : nil) %>
+
+	<%# -- Literal pattern -- %>
+	<%= text_field_tag("property_bridge_property_setting[#{@object_pbps.id}][d2rq:pattern][value]",
+			   object_literal_value,
+			   id: "#{prefix}object-literal-pattern-#{@property_bridge.id}",
+			   class: "form-control",
+			   style: @object_pbps.property_bridge_property_id != PropertyBridgeProperty.literal_pattern.id ? "display:none;" : nil) %>
+
+	<%# -- Literal column -- %>
+	<%= select_tag("property_bridge_property_setting[#{@object_pbps.id}][d2rq:column][value]",
+		       option_tags,
+		       id: "#{prefix}object-literal-column-#{@property_bridge.id}",
+		       class: "form-control",
+		       style: @object_pbps.property_bridge_property_id != PropertyBridgeProperty.literal_column.id ? "display:none;" : nil) %>
+      </div>
+    </div>
+
+    <div class="form-group" id="<%= prefix %>object-language-datatype-<%= @property_bridge.id %>">
+      <%# -- Language -- %>
+      <label for="object-language-<%= @property_bridge.id %>" class="col-sm-2 control-label">Language</label>
+      <div class="col-sm-3">
+	<%= text_field_tag("property_bridge_property_setting[#{@lang_pbps.id}][value]",
+	                   @lang_pbps.value,
+			   id: "#{prefix}object-language-#{@property_bridge.id}",
+			   class: "form-control input-sm") %>
+      </div>
+      <%= render(partial: 'tooltip_icon',
+		 locals: { title: %Q|[Optional] Specify a language tag (e.g., en for English, ja for Japanese) to be added for generating an object literal with a language tag (e.g., &quot;foobar&quot;@en)| }) %>
+      
+      <%# -- Datatype -- %>
+      <label for="<%= prefix %>object-datatype-<%= @property_bridge.id %>" class="col-sm-2 control-label">Datatype</label>
+      <div class="col-sm-3">
+	<%= text_field_tag("property_bridge_property_setting[#{@datatype_pbps.id}][value]",
+			   @datatype_pbps.value,
+			   id: "#{prefix}object-datatype-#{@property_bridge.id}",
+			   class: "form-control input-sm") %>
+      </div>
+      <%= render(partial: 'tooltip_icon',
+		 locals: { title: "[Optional] Specify a datatype URI (e.g., xsd:integer) to be added for generating an object literal with a datatype (e.g., 123^^xsd:integer)" }) %>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-triple">
+  <div class="panel-heading">
+    <h3>WHERE condition</h3>
+  </div>
+  <div class="panel-body">
+    <div class="form-group">
+      <label for="<%= prefix %>po-where-condition-#{property_bridge.id}" class="col-sm-2 control-label">SQL where condition</label>
+      <div class="col-sm-9">
+	<%= text_field_tag("property_bridge_property_setting[#{@condition_pbps.id}][value]",
+			   @condition_pbps.value,
+			   id: "#{prefix}po-where-condition-#{@property_bridge.id}",
+			   class: "form-control") %>
+      </div>
+      <%= render(partial: 'tooltip_icon',
+		 locals: { title: 'If the condition evaluates to TRUE for a SQL result set row, then triples will be generated from that row.' }) %>
+    </div>
+  </div>
+</div>

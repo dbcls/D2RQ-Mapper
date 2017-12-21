@@ -1,0 +1,17 @@
+<div class="form-group<% if first && !rdf_type_cmps.class_map.for_bnode?%> required<% end %>">
+  <label for="subject-rdf-type" class="col-sm-2 control-label">Class (rdf:type)</label>
+  <% if first %>
+    <span><button type="button" id="add-class-btn" class="btn btn-primary" style="width:36px; height:32px; margin:0px; padding:0px;"><i class="fa fa-plus" style="width:11px; height:11px; text-align:center; font-size:16px; margin:0px; padding:0px;"></i></button></span>
+  <% else %>
+    <span><button type="button" class="subject-del-rdf-type-btn btn btn-default btn-delete" style="width:36px; height:32px; margin:0px; padding:0px;"><i class="fa fa-trash-o" style="width:11px; height:11px; text-align:center; font-size:18px; margin:0px; padding:0px;"></i></button></span>
+  <% end %>
+  <div id="subject-expression" class="col-sm-9">
+    <% if rdf_type_cmps.nil? %>
+      <%= text_field_tag("subject_rdf_types[]", "", class: "form-control") %>
+    <% else %>
+      <%= text_field_tag("class_map_property_setting[#{rdf_type_cmps.id}][value]",
+			 absolute_uri(base_uri, rdf_type_cmps.value),
+			 id: "subject-rdf-type-#{rdf_type_cmps.id}", class: "form-control") %>
+    <% end %>
+  </div>
+</div>

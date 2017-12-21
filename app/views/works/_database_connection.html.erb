@@ -1,0 +1,51 @@
+<div class="form-group required">
+  <%= label :db_connection, :adapter, 'Adapter', class: 'col-sm-2 control-label' %>
+  <div class="col-sm-9">
+    <%= select :db_connection, :adapter,
+    [ ['MySQL', 'mysql2'], ['PostgreSQL', 'postgresql'], ['SQLite', 'sqlite3'] ], {}, class: "form-control" %>
+  </div>
+  <%= render partial: 'tooltip_icon', locals: { title: "[Required] Select RDBMS to be connected." } %>
+</div>
+
+<div class="form-group required" id="db-connection-host-part">
+  <%= label :db_connection, :host, 'Host', class: 'col-sm-2 control-label' %>
+  <div class="col-sm-9">
+    <%= text_field :db_connection, :host, class: "form-control" %>
+  </div>
+  <%= render partial: 'tooltip_icon', locals: { title: " [Required] Host name or IP address of the RDBMS server." } %>
+</div>
+
+<div class="form-group required" id="db-connection-port-part">
+  <%= label :db_connection, :port, 'Port', class: 'col-sm-2 control-label' %>
+  <div class="col-sm-9">
+    <%= text_field :db_connection, :port, class: "form-control" %>
+  </div>
+  <%= render partial: 'tooltip_icon', locals: { title: "[Required] TCP/IP port number of the RDBMS server." } %>
+</div>
+
+<div class="form-group required" id="db-connection-database-part">
+  <%= label :db_connection, :database, 'Database name', class: 'col-sm-2 control-label', id: 'db-connection-db-label' %>
+  <div class="col-sm-9">
+    <%= text_field :db_connection, :database, class: "form-control" %>
+  </div>
+  <%= render partial: 'tooltip_icon', locals: { title: "[Required] Name of the database in the RDBMS server." } %>
+</div>
+
+<div class="form-group required" id="db-connection-username-part">
+  <%= label  :db_connection, :username, 'User', class: 'col-sm-2 control-label' %>
+  <div class="col-sm-9">
+    <%= text_field :db_connection, :username, class: "form-control" %>
+  </div>
+  <%= render partial: 'tooltip_icon', locals: { title: "[Required] User ID for accessing the RDBMS server." } %>
+</div>
+
+<div class="form-group" id="db-connection-password-part">
+  <%= label :db_connection, :password, 'Password', class: 'col-sm-2 control-label' %>
+  <div class="col-sm-9">
+    <%= password_field :db_connection, :password, class: "form-control" %>
+  </div>
+  <%= render partial: 'tooltip_icon', locals: { title: "[Optional] User's password for accessing the RDBMS server (empty string will be used if not specified)." } %>
+</div>
+
+<%= hidden_field :db_connection, :id %>
+<%= hidden_field :db_connection, :work_id %>

@@ -1,0 +1,110 @@
+<% content_for :head do %>
+<title>Tables | D2RQ Mapper</title>
+<script>
+$(function () {
+  var property_bridges = {}
+  <% @class_maps.each do |class_map| %>
+  property_bridges[<%= class_map.id %>] = [<%== @property_bridges[class_map.id].map{ |pb| "{value: '#{pb.id}', label: '#{pb.column_name}'}" }.join(',') %>];
+  <% end %>
+
+  $("#table_join_l_table_class_map_id").change(function() {
+    var class_map_id = $("#table_join_l_table_class_map_id option:selected").val();
+
+    $("#table_join_l_table_property_bridge_id").children().remove();
+
+    for (var i = 0; i < property_bridges[class_map_id].length; i++) {
+      $("#table_join_l_table_property_bridge_id").append($('<option>').attr({ value: property_bridges[class_map_id][i].value }).text(property_bridges[class_map_id][i].label));
+    };
+  });
+
+
+  $("#table_join_i_table_class_map_id").change(function() {
+    var class_map_id = $("#table_join_i_table_class_map_id option:selected").val();
+
+    $("#table_join_i_table_l_property_bridge_id").children().remove();
+    $("#table_join_i_table_r_property_bridge_id").children().remove();
+
+    if (class_map_id == "") {
+      $("#table_join_i_table_l_property_bridge_id").append($('<option>').attr({ value: "" }).text(""));
+      $("#table_join_i_table_r_property_bridge_id").append($('<option>').attr({ value: "" }).text(""));
+    } else {
+      for (var i = 0; i < property_bridges[class_map_id].length; i++) {
+	$("#table_join_i_table_l_property_bridge_id").append($('<option>').attr({ value: property_bridges[class_map_id][i].value }).text(property_bridges[class_map_id][i].label));
+	$("#table_join_i_table_r_property_bridge_id").append($('<option>').attr({ value: property_bridges[class_map_id][i].value }).text(property_bridges[class_map_id][i].label));
+      }
+    }
+  });
+
+
+  $("#table_join_r_table_class_map_id").change(function() {
+    var class_map_id = $("#table_join_r_table_class_map_id option:selected").val();
+
+    $("#table_join_r_table_property_bridge_id").children().remove();
+
+    for (var i = 0; i < property_bridges[class_map_id].length; i++) {
+      $("#table_join_r_table_property_bridge_id").append($('<option>').attr({ value: property_bridges[class_map_id][i].value }).text(property_bridges[class_map_id][i].label));
+    };
+  });
+
+
+  $("#tables-link").click(function() {
+    return false;
+  });
+
+
+  $('#intermediate_switch').change(function(){
+    if ( $(this).is(':checked') ) {
+      $('#modal-join').addClass('multiple');
+      $('.element.intermediate select').prop('disabled', false);
+    } else {
+      $('#modal-join').removeClass('multiple');
+      $('.element.intermediate select').prop('disabled', true);
+    }
+  });
+
+
+  $("#bnode-table").change(function() {
+    var class_map_id = $("#bnode-table option:selected").val();
+    $("#bnode-column").children().remove();
+    for (var i = 0; i < property_bridges[class_map_id].length; i++) {
+      $("#bnode-column").append($("<option>").attr({ value: property_bridges[class_map_id][i].value }).text(property_bridges[class_map_id][i].label));
+    }
+  });
+
+
+  $(".btn-rdf").click(function() {
+    var elem_id = $(this).attr("id");
+    var class_map_id = elem_id.substring("rdf-btn-".length);
+    var url = "<%= subject_maps_path %>/" + class_map_id;
+    var enable = $(this).hasClass("btn-rdf-enable");
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+	"_method": "patch",
+	"class_map[enable]": enable
+      },
+      dataType: "script",
+      success: function(data, dataType) {
+      },
+      error: function(request, status, error) {
+      },
+      complete: function(request, status) {
+      }
+    });
+  });
+
+});
+</script>
+<% end %>
+
+<div id="contents">
+  <section id="side">
+    <%= render partial: 'mappings/side_menu', locals: { current: 'subject_maps', class_map: @class_maps.select(&:enable)[0] } %>
+  </section>
+
+  <section id="main">
+    <%= render 'main_section' %>
+  </section>
+</div>

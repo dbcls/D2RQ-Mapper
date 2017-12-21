@@ -1,0 +1,42 @@
+<%= form_for(@work, html: {class: "form-horizontal"}) do |f| %>
+  <h1 class="heading01">Basic configuration</h1>
+  <div><%= render 'flash_message' %></div>
+  <%= render partial: 'basic_config', locals: { f: f } %>
+
+  <% if current_user.username == 'togodb-demo' %>
+    <%= render 'database_connection_togodb' %>
+  <% else %>
+    <h2 class="heading03">Database connection</h2>
+    <%= render 'database_connection' %>
+
+    <h2 class="heading03">License</h2>
+    <%= render partial: 'license', locals: { f: f } %>
+  <% end %>
+  
+  <div class="submit form-group">
+    <button type="submit" id="save-config-btn" class="btn btn-primary"><i class="fa fa-heart"></i>Save</button>
+    <% if @work.id %>
+      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteConfirmModal"><i class="fa fa-trash-o"></i>Delete</button>
+    <% end %>
+  </div>
+<% end %>
+
+<%# -- confirm dialog for delete mapping -- %>
+<% if @work.id %>
+  <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+	<div class="modal-header">
+	  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	  <h4 class="modal-title" id="myModalLabel">Are you sure you want to delete this mapping ?</h4>
+	</div>
+	<div class="modal-footer">
+	  <%= form_tag work_path(@work), method: :delete do %>
+	    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	    <button type="submit" class="btn btn-danger" id="delete-mapping-btn">Delete mapping</button>
+	  <% end -%>
+	</div>
+      </div>
+    </div>
+  </div>
+<% end %>

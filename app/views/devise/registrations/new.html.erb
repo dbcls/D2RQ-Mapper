@@ -1,0 +1,77 @@
+<% content_for :head do %>
+<title>Sing up | D2RQ Mapper</title>
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+  $('body').addClass('page-signup');
+
+  $("#cancel-btn").click(function() {
+    location.href = "<%= root_path %>";
+  });
+});
+</script>
+<% end %>
+
+<div id="contents">
+  <section id="side">
+    <div class="menu">
+      <h1 class="haeding-user-account">User account</h1>
+      <ul class="btn-set">
+	<li><%= link_to 'Login', new_user_session_path, class: "btn btn-default btn-block" %></li>
+	<li class="current"><%= link_to 'Sing up', new_user_registration_path, class: "btn btn-primary btn-block" %></li>
+	<li><%= link_to 'Edit profile', edit_user_registration_path, class:"btn btn-default btn-block disabled" %></li>
+      </ul>
+    </div>
+  </section>
+  <section id="main">
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "form-horizontal" }) do |f| %>
+
+      <h1 class="heading01">Sign up</h1>
+      <%= devise_error_messages! %>
+
+      <div class="form-group required">
+	      <%= f.label :username, class: "col-sm-2 control-label" %>
+	      <div class="col-sm-9">
+	        <%= f.text_field :username, autofocus: true, class: "form-control" %>
+	      </div>
+	      <%#= render partial: 'shared/tooltip_icon', locals: { title: 'Some tooltip text!' } %>
+      </div>
+
+      <div class="form-group required">
+	      <%= f.label :email, class: "col-sm-2 control-label" %>
+	      <div class="col-sm-9">
+	        <%= f.email_field :email, class: "form-control" %>
+	      </div>
+	      <%#= render partial: 'shared/tooltip_icon', locals: { title: 'Some tooltip text!' } %>
+      </div>
+
+      <% if f.object.password_required? %>
+	      <div class="form-group required">
+	        <%= f.label :password, class: "col-sm-2 control-label" do %>
+	          Password
+	        <% end -%>
+	        <div class="col-sm-9">
+	        <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
+	        <% if @validatable %>
+	          <p><small>minimum <%= @minimum_password_length %> characters</small></p>
+	        <% end -%>
+	      </div>
+	      <%#= render partial: 'shared/tooltip_icon', locals: { title: 'Some tooltip text!' } %>
+	</div>
+
+	<div class="form-group required">
+	  <%= f.label :password_confirmation, class: "col-sm-2 control-label" %>
+	  <div class="col-sm-9">
+	    <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
+	  </div>
+	  <%#= render partial: 'shared/tooltip_icon', locals: { title: 'Some tooltip text!' } %>
+	</div>
+      <% end %>
+
+      <div class="submit form-group">
+	<button type="submit" class="btn btn-primary" name="commit"><i class="fa fa-sign-in"></i>Sign up</button>
+	<button type="button" class="btn btn-default" name="cancel" id="cancel-btn"><i class="fa fa-times"></i>Cancel</button>
+      </div>
+    <% end %>
+  </section>
+</div>

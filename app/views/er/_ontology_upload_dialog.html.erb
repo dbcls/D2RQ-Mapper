@@ -1,0 +1,42 @@
+<div class="modal fade" id="upload-ontology">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title">Upload ontology</h4>
+      </div>
+
+      <div class="modal-body">
+	<div class="ontology-upload-view">
+	  <%= form_tag upload_ontology_er_path(@work.id), multipart: true do %>
+	    <div>
+	      Ontology file: <%= file_field_tag :ontology_file %>
+	    </div>
+
+	    <div style="padding-top:10px; padding-bottom:10px;">
+	      File format:
+	      <%= radio_button_tag :file_format, "rdfxml", checked: true %>RDF/XML
+	      <%= radio_button_tag :file_format, "turtle" %>Turtle
+	    </div>
+
+	    <div style="padding-top:10px; padding-bottom:10px;">
+	      <div style="padding-bottom:5px;">
+		Namespaces:
+		<button id="up-ontology-ns-add-btn" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Add form</button>
+	      </div>
+	      <div id="up-ontology-ns-forms">
+		<%= render partial: 'upload_ontology_ns_form', locals: { del_btn: false } %>
+	      </div>
+	    </div>
+
+	    <div class="modal-footer">
+	      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      <button type="submit" class="btn btn-primary">Upload</button>
+	    </div>
+	  <% end %>
+	</div><!-- /.join-edit-view -->
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,0 +1,6 @@
+<% property = 'd2rq:bNodeIdColumns' %>
+<%= select_tag("class_map_property_setting[#{@class_map_property_setting[:subject].id}][#{property}][value]",
+	       options_for_select(@property_bridges_for_subject_column_selector.map{ |property_bridge| ["#{property_bridge.column_name}", "#{@class_map.table_name}.#{property_bridge.column_name}"] },
+				  selected: @subject_uri[property]),
+	       id: "subject-uri-column", class: "form-control", style: "display:none;") %>
+<%= hidden_field_tag "class_map_property_setting[#{@class_map_property_setting[:subject].id}][class_map_property_id]", ClassMapProperty.bnode.id %>

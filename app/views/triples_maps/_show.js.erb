@@ -1,0 +1,170 @@
+var subject_formats = {};
+<% @subject_format_properties.each do |class_map_property| %>
+subject_formats["<%= class_map_property.id %>"] = "<%== class_map_property.property %>";
+<% end %>
+
+var object_formats = {};
+<% @object_properties.each do |property_bridge_property| %>
+object_formats["<%= property_bridge_property.id %>"] = "<%== property_bridge_property.property %>";
+<% end %>
+
+var switch_subject_uri_form = function(format_value) {
+  var subject_format = subject_formats[format_value];
+
+  $("#subject-uri-pattern").hide();
+  $("#subject-uri-column").hide();
+  $("#subject-constant-value").hide();
+
+  if (subject_format === "d2rq:uriPattern") {
+    $("#subject-uri-pattern").show();
+  } else if (subject_format === "d2rq:uriColumn" || subject_format === "d2rq:bNodeIdColumns") {
+    $("#subject-uri-column").show();
+  }
+};
+
+var switch_object_form = function(format_value, property_bridge_id) {
+  var object_format = object_formats[format_value];
+
+  $("#object-literal-column-" + property_bridge_id).hide();
+  $("#object-literal-pattern-" + property_bridge_id).hide();
+  $("#object-uri-column-" + property_bridge_id).hide();
+  $("#object-uri-pattern-" + property_bridge_id).hide();
+
+  if (object_format === "d2rq:uriPattern") {
+    $("#object-uri-pattern-" + property_bridge_id).show();
+    $("#object-language-datatype-" + property_bridge_id).hide();
+  } else if (object_format === "d2rq:uriColumn") {
+    $("#object-uri-column-" + property_bridge_id).show();
+    $("#object-language-datatype-" + property_bridge_id).hide();
+  } else if (object_format === "d2rq:pattern") {
+    $("#object-literal-pattern-" + property_bridge_id).show();
+    $("#object-language-datatype-" + property_bridge_id).show();
+  } else if (object_format === "d2rq:column") {
+    $("#object-literal-column-" + property_bridge_id).show();
+    $("#object-language-datatype-" + property_bridge_id).show();
+  }
+};
+
+var bind_subject_uri_format_btn = function() {
+  $(".subject-uri-format").unbind("click");
+  $(".subject-uri-format").bind("click", function() {
+    var selected_value = $(this).val();
+    switch_subject_uri_form(selected_value);
+  });
+};
+
+var bind_add_subject_rdf_type_btn = function() {
+  $("#add-class-btn").unbind("click");
+  $("#add-class-btn").bind("click", function() {
+    var html = "<%= j render(partial: 'subject_rdf_type_form', locals: { rdf_type_cmps: nil, first: false }) %>";
+    $("#subject-rdf-type-wrapper").append(html);
+    bind_del_subject_rdf_type_btn();
+  });
+};
+
+var bind_del_subject_rdf_type_btn = function() {
+  $(".subject-del-rdf-type-btn").unbind("click");
+  $(".subject-del-rdf-type-btn").bind("click", function() {
+    $(this).closest("div.form-group").remove();
+  });
+};
+
+var bind_rdf_btn = function() {
+  $(".btn-rdf").unbind("click");
+  $(".btn-rdf").bind("click", function() {
+    var elem_id = $(this).attr("id");
+    var property_bridge_id = elem_id.substring("column-rdf-btn-".length);
+    var enable_elem = $("#column-rdf-enable-" + property_bridge_id);
+
+    if (enable_elem.val() == "true") {
+      enable_elem.val("false");
+      $(this).removeClass("btn-primary btn-rdf-disable");
+      $(this).addClass("btn-default btn-rdf-enable");
+      $("#column-listitem-" + property_bridge_id).addClass("disabled");
+    } else {
+      enable_elem.val("true");
+      $(this).removeClass("btn-default btn-rdf-enable");
+      $(this).addClass("btn-primary btn-rdf-disable");
+      $("#column-listitem-" + property_bridge_id).removeClass("disabled");
+    }
+  });
+};
+
+var bind_add_property_bridge_btn = function() {
+  $(".add-property-bridge-btn").unbind("click");
+  $(".add-property-bridge-btn").bind("click", function() {
+    var li = $(this).closest("li");
+    var property_bridge_id = li.attr("data-pbid");
+    
+    $.get("/ajax/new_property_bridge_form", {class_map_id: "<%= @class_map.id %>", property_bridge_id:  property_bridge_id},
+      function(html) {
+	li.after(html);
+	$('.collapse').collapse();
+	bind_object_format_btn();
+	bind_rdf_btn();
+	bind_del_property_bridge_btn();
+	bind_add_predicate_btn();
+      }
+    );
+  });
+};
+
+var bind_del_property_bridge_btn = function() {
+  $(".del-property-bridge-btn").unbind("click");
+  $(".del-property-bridge-btn").bind("click", function() {
+    var property_bridge_id = $(this).attr("data-pbid");
+    $.get("/ajax/del_property_bridge_form", {property_bridge_id:  property_bridge_id},
+      function(data) {
+	$("li#column-listitem-" + property_bridge_id).remove();
+      }
+    );
+  });
+};
+
+var bind_add_predicate_btn = function() {
+  $(".add-predicate-btn").unbind("click");
+  $(".add-predicate-btn").bind("click", function() {
+    var property_bridge_id = $(this).attr("data-pbid");
+    $.get("/ajax/new_predicate_form", {property_bridge_id: property_bridge_id},
+      function(html) {
+	$("#predicate-wrapper-" + property_bridge_id).append(html);
+	bind_del_predicate_btn();
+      }
+    );
+  });
+};
+
+var bind_del_predicate_btn = function() {
+  $(".predicate-del-btn").unbind("click");
+  $(".predicate-del-btn").bind("click", function() {
+    $(this).closest("div.form-group").remove();
+  });
+};
+
+var bind_object_format_btn = function() {
+  $(".object-format").unbind("click");
+  $(".object-format").bind("click", function() {
+    var selected_value = $(this).val();
+    var property_bridge_id = $(this).attr("data-pbid");
+    switch_object_form(selected_value, property_bridge_id);
+  });
+};
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+  $('.collapse').collapse();
+
+  switch_subject_uri_form("<%= @class_map_property_setting[:subject].class_map_property_id %>");
+  
+  <%= render partial: 'table_selector_handler' %>
+
+  bind_subject_uri_format_btn();
+  bind_add_subject_rdf_type_btn();
+  bind_del_subject_rdf_type_btn();
+  bind_rdf_btn();
+  bind_add_property_bridge_btn();
+  bind_del_property_bridge_btn();
+  bind_add_predicate_btn();
+  bind_del_predicate_btn();
+  bind_object_format_btn();
+});

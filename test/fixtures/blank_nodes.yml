@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  work_id: 1
+  class_map_id: 1
+  property_bridge_id: 1
+
+two:
+  work_id: 1
+  class_map_id: 1
+  property_bridge_id: 1

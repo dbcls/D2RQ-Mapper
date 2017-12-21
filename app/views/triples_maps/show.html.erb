@@ -1,0 +1,22 @@
+<% content_for :head do %>
+  <title>Configure mapping | D2RQ Mapper</title>
+  <script>
+  <% if @table_not_found %>  
+  $(function () {
+    <%= render partial: 'table_selector_handler', formats: [ :js ] %>
+  });
+  <% else %>
+    <%= render partial: 'show', formats: [ :js ] %>  
+  <% end %>
+  </script>
+<% end %>
+
+<div id="contents">
+  <section id="side">
+    <%= render partial: 'mappings/side_menu', locals: { current: 'triples_maps', class_map: @class_map } %>
+  </section>
+
+  <section id="main">
+    <%= render 'main_section' %>
+  </section>
+</div>

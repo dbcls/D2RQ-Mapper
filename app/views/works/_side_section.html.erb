@@ -1,0 +1,31 @@
+<div class="menu">
+  <h1 class="haeding-set">Set relational databases</h1>
+  <div class="btn-set">
+    <%= link_to new_work_path do %>
+      <button type="button" id="new-mapping-btn" class="btn btn-primary btn-block"><i class="fa fa-plus"></i>New</button>
+    <% end %>
+  </div>
+
+  <h2>Existing mappings</h2>
+  <div id="existing-mappings"><%= render 'existing_mappings' %></div>
+  <div class="pager-box">
+    <ul class="pager">
+      <li class="previous">
+	<%= link_to(@work.id ? menu_path(@work.id) : menu_index_path) do %>
+	  <i class="fa fa-angle-left"></i>Menu
+	<% end %>
+      </li>
+      <% if @work.id %>
+	<li class="next">
+	  <%= link_to subject_map_path(@work.id) do %>
+	    Next<i class="fa fa-angle-right"></i>
+	  <% end %>
+	</li>
+      <% else %>
+	<li class="next disabled">
+	  <a id="next-link" href="#">Next<i class="fa fa-angle-right"></i></a>
+	</li>
+      <% end %>
+    </ul>
+  </div>
+</div>

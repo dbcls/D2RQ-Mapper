@@ -1,0 +1,13 @@
+<div id="license-form" class="license-group">
+  <div><%= f.radio_button :license_id, 0 %><%= f.label :license_id_0, "Do not specify license" %></div>
+  <div><%= f.radio_button :license_id, 1 %><%= f.label :license_id_1, "Public Domain Dedication and License (PDDL)" %></div>
+  <div><%= f.radio_button :license_id, 2 %><%= f.label :license_id_2, "Attribution License (ODC-By)" %></div>
+  <div><%= f.radio_button :license_id, 3 %><%= f.label :license_id_3, "Open Database License (ODC-ODbL)" %></div>
+  <div><%= f.radio_button :license_id, 4 %><%= f.label :license_id_4, "CC0 Public Domain Dedication (CC0)" %></div>
+  <div><%= f.radio_button :license_id, 5 %><%= f.label :license_id_5, "Commons Attribution 4.0 International (CC BY 4.0)" %></div>
+  <div><%= f.radio_button :license_id, 6 %><%= f.label :license_id_6, "Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)" %></div>
+  <div>
+    <%= f.radio_button :license_id, 7 %><%= f.label :license_id_7, "Other License (Please enter your own license below)" %><br />
+    <%= f.text_area :license, size: "100x10" %>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  work_id: 1
+  ontology: MyText
+  file_name: MyString
+  file_format: MyString
+
+two:
+  work_id: 1
+  ontology: MyText
+  file_name: MyString
+  file_format: MyString

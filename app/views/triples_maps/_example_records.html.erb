@@ -1,0 +1,59 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <% if current_user.username == 'togodb-demo' %>
+      <h3 class="panel-title"><i class="fa fa-database"></i><%= @exmaple_records_table_name %></h3>
+    <% else %>
+      <h3 class="panel-title"><i class="fa fa-database"></i><%= @db_connection.database %>:<i class="fa fa-table"></i><%= @exmaple_records_table_name %></h3>
+    <% end %>
+  </div>
+  <div class="panel-body">
+    <div class="table-responsive">
+      <% if @records.empty? %>
+      <table class="table">
+	<thead>
+	  <tr>
+	    <% @property_bridges.each do |property_bridge| %>
+	    <th class="nowrap">
+	      <% if @class_map_type == 'T' %>
+		<%== example_records_sp_icon(@class_map, @property_bridge_hash[property_bridge.column_name]) %>
+	      <% end %>
+	      <%= property_bridge.column_name %>
+	    </th>
+	    <% end %>
+	  </tr>
+	</thead>
+	<tbody>
+	  <tr><td colspan="<%= @property_bridges.size %>">No records.</td></tr>
+	</tbody>
+      </table>
+      <% else %>
+      <% colnames = @records[0].keys %>
+      <table class="table">
+	<thead>
+	  <tr>
+	    <% colnames.each do |colname| %>
+	      <th class="nowrap">
+		<% if @class_map_type == 'T' %>
+		  <div style="white-space:nowrap;"><%== example_records_sp_icon(@class_map, @property_bridge_hash[colname]) %> <%= colname %></div>
+		<% elsif @class_map_type == 'J' %>
+		  <%== colname %>
+		<% end %>
+	      </th>
+	    <% end %>
+	  </tr>
+	</thead>
+	<tbody>
+	  <% @records.each do |record| %>
+	  <tr>
+	    <% colnames.each do |colname| %>
+	    <td><%= record[colname].to_s.truncate(40) %></td>
+	    <% end %>
+	  </tr>
+	  <% end %>
+	</tbody>
+      </table>
+      <% end %>
+    </div>
+  </div>
+</div>
+<p class="note text-right"><% unless @records.empty? %>Show <%= @records.size %> lines<% end %></p>

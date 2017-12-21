@@ -1,0 +1,47 @@
+$("#staticModalPredicateObjectMap").html("<%= j render(partial: 'predicate_object_map_dialog') %>");
+
+$("#add-property-btn").click(function() {
+  $("#predicate-wrapper-<%= @property_bridge.id %>").append("<%= j render(partial: 'new_property_form') %>");
+  $(".predicate-del-btn").unbind("click");
+  $(".predicate-del-btn").bind("click", function() {
+    $(this).closest("div.form-group").remove();
+  });
+});
+
+$(".predicate-del-btn").bind("click", function() {
+  $(this).closest("div.form-group").remove();
+});
+
+<% if @object_pbps.property_bridge_property_id == PropertyBridgeProperty.uri_pattern.id || @object_pbps.property_bridge_property_id == PropertyBridgeProperty.uri_column.id %>
+$("#object-language-datatype-<%= @property_bridge.id %>").hide();
+<% end %>
+
+$("#object-format-selector").change(function() {
+  var selected = $("#object-format-selector option:selected").val();
+
+  $("#object-uri-pattern-<%= @property_bridge.id %>").hide();
+  $("#object-uri-column-<%= @property_bridge.id %>").hide();
+  $("#object-literal-pattern-<%= @property_bridge.id %>").hide();
+  $("#object-literal-column-<%= @property_bridge.id %>").hide();
+
+  if (selected == "<%= PropertyBridgeProperty.uri_pattern.id %>") {
+    $("#object-uri-pattern-<%= @property_bridge.id %>").show();
+    $("#object-language-datatype-<%= @property_bridge.id %>").hide();
+  } else if (selected == "<%= PropertyBridgeProperty.uri_column.id %>") {
+    $("#object-uri-column-<%= @property_bridge.id %>").show();
+    $("#object-language-datatype-<%= @property_bridge.id %>").hide();
+  } else if (selected == "<%= PropertyBridgeProperty.literal_pattern.id %>") {
+    $("#object-literal-pattern-<%= @property_bridge.id %>").show();
+    $("#object-language-datatype-<%= @property_bridge.id %>").show();
+  } else if (selected == "<%= PropertyBridgeProperty.literal_column.id %>") {
+    $("#object-literal-column-<%= @property_bridge.id %>").show();
+    $("#object-language-datatype-<%= @property_bridge.id %>").show();
+  }
+});
+
+$("#staticModalPredicateObjectMap").draggable({
+  handle: "#predicate-object-map-dialog-header"
+});
+$('[data-toggle="tooltip"]').tooltip();
+
+$("#staticModalPredicateObjectMap").modal();

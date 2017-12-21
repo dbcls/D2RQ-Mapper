@@ -1,0 +1,17 @@
+<h1 class="haeding-set">Set relational databases</h1>
+<div class="btn-set">
+  <h2>Create</h2>
+  <button type="button" class="btn btn-primary btn-block" id="new-mapping-btn"><i class="fa fa-plus"></i>New</button>
+</div>
+
+<h2>Existing mappings</h2>
+<ul class="existing">
+  <% @works.each do |work| %>
+    <li class="existing-mapping<% if @work && @work.id == work.id %> checked<% end %>" data-workid="<%= work.id %>">
+      <%= link_to raw(existing_mapping_item_text(work)), menu_path(work.id) %>
+      <%= link_to edit_work_path(work) do %>
+	<button type="button" class="btn btn-primary"><i class="fa fa-cog"></i></button>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

@@ -1,0 +1,2 @@
+$("p[role='alert']").remove();
+$("h1.heading01").after("<%= j(render partial: "alert_message", locals: { message: "Sorry, internal server error has occurred." }) %>");

@@ -1,0 +1,14 @@
+<div class="form-group required">
+  <label for="predicate_<%= property_bridge.id %>" class="col-sm-2 control-label" style="width:10%;">URI</label>
+  <div class="col-sm-9">
+    <%= text_field_tag("property_bridge_property_setting[#{predicate.id}][value]",
+		       absolute_uri(@base_uri, predicate.value),
+		       id: "predicate_#{property_bridge.id}", class: "form-control", placeholder: "rdfs:seeAlso") %>
+  </div>
+  <% unless first %>
+    <span><button type="button" class="predicate-del-btn btn btn-default btn-delete" style="width:36px; height:32px; margin:0px; padding:0px;"><i class="fa fa-trash-o" style="width:11px; height:11px; text-align:center; font-size:18px; margin:0px; padding:0px;"></i></button></span>
+  <% else %>
+    <%= render(partial: 'tooltip_icon',
+	       locals: { title: 'URI: Specify a predicate URI to link two tables.' }) %>
+  <% end %>
+</div>

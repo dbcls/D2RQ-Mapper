@@ -1,0 +1,10 @@
+$("#namespaces-message").html("");
+$("#namespaces-error-message").html("");
+<% if @error_message %>
+  $("#namespaces-error-message").html("<%= j(render partial: 'alert_message', locals: { message: @error_message }) %>");
+<% elsif @notice_message %>
+  $("#namespaces-message").html("<%= j(render partial: 'notice_message', locals: { message: @notice_message }) %>");
+<% elsif @success_message %>
+  $("#namespaces-message").html("<%= j(render partial: 'success_message', locals: { message: @success_message }) %>");
+<% end %>
+$('html,body').animate({ scrollTop: 0 }, 'fast');

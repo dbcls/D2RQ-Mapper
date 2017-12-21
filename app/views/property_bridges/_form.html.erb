@@ -1,0 +1,41 @@
+<% if @mode == 'edit'
+  path = property_bridge_path(@property_bridge)
+  method = :patch
+  remote = true
+elsif @mode == 'new'
+  path = triples_map_property_bridges_path(@class_map)
+  method = :post
+  remote = false
+else
+  path = property_bridge_path(@property_bridge)
+  method = :patch
+  remote = true
+end %>
+<%= form_tag(path, remote: remote, method: method, class: "form-horizontal") do %>
+  <% if @mode == 'new' %>
+    <%= hidden_field_tag 'src_pbid', @property_bridge.id %>
+  <% end %>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div id="predicate-object-map-dialog-header" class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">
+	  <span aria-hidden="true">&#215;</span><span class="sr-only">Close</span>
+	</button>
+	<h4 class="modal-title">Predicate-Object Mapping: <%= @property_bridge.class_map.table_name %>.<%= @property_bridge.column_name %></h4>
+      </div><!-- /.modal-header -->
+
+      <div class="modal-body">
+	<div id="predicate-object-map-errors" style="display:none;"></div>
+	<%= render partial: 'body', locals: { prefix: '' } %>
+	<div id="predicate-object-mapping-message"></div>
+      </div> <!-- /.modal-body -->
+
+      <div class="modal-footer">
+	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	<button type="submit" class="btn btn-primary">Save</button>
+      </div> <!-- /.modal-footer -->
+
+    </div> <!-- /.modal-content -->
+  </div> <!-- /.modal-dialog -->
+<% end %>

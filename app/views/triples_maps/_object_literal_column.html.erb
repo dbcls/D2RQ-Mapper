@@ -1,0 +1,14 @@
+<%
+property = 'd2rq:column'
+
+name = "property_bridge_property_setting[#{property_bridge_property_setting[:object].id}][#{property}][value]"
+
+select_options = options_for_select(@property_bridges_for_object_column_selector.map{ |property_bridge| ["#{property_bridge.real_column_name}", "#{property_bridge.class_map.table_name}.#{property_bridge.column_name}"] }, selected: @object_value[property_bridge.id] ? @object_value[property_bridge.id][property] : nil)
+
+html_opts = { id: "object-literal-column-#{property_bridge.id}", class: "form-control" }
+unless disp
+  html_opts[:style] = "display:none;"
+end
+%>
+
+<%= select_tag(name, select_options, html_opts) %>

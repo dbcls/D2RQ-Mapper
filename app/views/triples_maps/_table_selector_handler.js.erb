@@ -1,0 +1,5 @@
+$("#table-selector").change(function() {
+  var selected_value = $("#table-selector option:selected").val();
+
+  location.href = "<%= triples_maps_path %>/" + selected_value;
+});

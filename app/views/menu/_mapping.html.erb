@@ -1,0 +1,18 @@
+<h1 class="haeding-edit">Edit mapping</h1>
+<div class="btn-set">
+  <h2>Customize</h2>
+  <%= render partial: 'button_tag', locals: { button_id: 'edit-mapping-tables', button_label: current_user.username == 'togodb-demo' ? 'Databases' : 'Tables' } %>
+
+  <% if @class_maps.nil? || !@class_maps.empty? %>
+    <%= render partial: 'button_tag', locals: { button_id: 'edit-mapping-configure', button_label: 'Configure mapping' } %>
+  <% end %>
+
+  <%= render partial: 'button_tag', locals: { button_id: 'edit-mapping-namespace', button_label: 'Namespaces' } %>
+
+  <% if @class_maps.nil? || !@class_maps.empty? %>
+    <div style="padding-top:10px;">
+      <%= render partial: 'button_tag', locals: { button_id: 'edit-mapping-er', button_label: 'ER diagram' } %>
+    </div>
+  <% end %>
+
+</div>

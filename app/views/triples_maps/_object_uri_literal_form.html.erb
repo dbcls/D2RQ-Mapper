@@ -1,0 +1,22 @@
+<label for="tables-join-object-format" class="col-sm-2 control-label">URI / Literal</label>
+<div class="col-sm-9">
+  <%= render(partial: 'object_uri_pattern',
+	     locals: {property_bridge: property_bridge,
+		      property_bridge_property_setting: property_bridge_property_setting,
+		      disp: object_format == 'd2rq:uriPattern'}) %>
+
+  <%= render(partial: 'object_uri_column',
+	     locals: {property_bridge: property_bridge,
+		      property_bridge_property_setting: property_bridge_property_setting,
+		      disp: object_format == 'd2rq:uriColumn'}) %>
+
+  <%= render(partial: 'object_literal_pattern',
+	     locals: {property_bridge: property_bridge,
+		      property_bridge_property_setting: property_bridge_property_setting,
+		      disp: object_format == 'd2rq:pattern'}) %>
+
+  <%= render(partial: 'object_literal_column',
+	     locals: {property_bridge: property_bridge,
+		      property_bridge_property_setting: property_bridge_property_setting,
+		      disp: object_format == 'd2rq:column'}) %>
+</div>

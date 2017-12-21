@@ -1,0 +1,7 @@
+$("#sparql-running-icon").hide();
+$("#sparql-result").show();
+<% if @status.success? %>
+$("#sparql-result").html("<pre><code><%= j(@result) %></code></pre>");
+<% else %>
+$("#sparql-result").html("<pre><code>ERROR:<br /><%= j(@stderr) %></code></pre>");
+<% end %>

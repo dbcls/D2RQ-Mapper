@@ -1,0 +1,11 @@
+<%
+value ||= ''
+prefix ||= ''
+%>
+<div class="form-group">
+  <label class="col-sm-2 control-label">Class (rdf:type)</label>
+  <span><button type="button" class="<%= prefix %>subject-del-rdf-type-btn btn btn-default btn-delete" style="width:36px; height:32px; margin:0px; padding:0px;"><i class="fa fa-trash-o" style="width:11px; height:11px; text-align:center; font-size:18px; margin:0px; padding:0px;"></i></button></span>
+  <div class="col-sm-9">
+    <%= text_field_tag "subject_classes[#{@class_map.id}][]", absolute_uri(@base_uri, value), class: "form-control" %>
+  </div>
+</div>

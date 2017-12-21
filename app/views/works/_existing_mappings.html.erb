@@ -1,0 +1,9 @@
+<ul class="existing">
+  <% @works.each do |work| %>
+    <li id="mapping-li-<%= work.id %>"<% if work.id == @work.id %> class="checked"<% end %>>
+      <%= link_to edit_work_path(work) do %>
+	<%== existing_mapping_item_text(work) %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

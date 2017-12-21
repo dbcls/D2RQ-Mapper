@@ -1,0 +1,11 @@
+<div class="form-group">
+  <label for="po-where-condition-<%= property_bridge.id %>" class="col-sm-2 control-label">SQL where condition</label>
+  <div class="col-sm-9">
+  <%= text_field_tag("property_bridge_property_setting[#{property_bridge_property_setting[:condition].id}][value]",
+                     property_bridge_property_setting[:condition].value,
+		     id: "po-where-condition-#{property_bridge.id}",
+		     class: "form-control") %>
+  </div>
+  <%= render(partial: 'tooltip_icon',
+	     locals: { title: 'If the condition evaluates to TRUE for a SQL result set row, then triples will be generated from that row.' }) %>
+</div>

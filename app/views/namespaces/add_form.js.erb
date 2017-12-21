@@ -1,0 +1,4 @@
+$("table#namespace-list > tbody").append("<%= j render(partial: 'namespace_tr', locals: { prefix: '', uri: '' }) %>");
+$("td.delete > button").bind("click", function() {
+  $(this).closest("tr").remove();
+});

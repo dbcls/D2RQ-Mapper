@@ -1,0 +1,53 @@
+$("#staticModalJoinMap").html("<%= j render(partial: 'table_join_dialog') %>");
+
+<% if @target == 'subject' %>
+<%= render partial: 'subject_map', format: [:js], locals: { prefix: 'join-' } %>
+<% end %>
+
+<% if @target == 'predicate-object' %>
+$("#join-add-property-btn").click(function() {
+  $("#join-predicate-wrapper-<%= @property_bridge.id %>").append("<%= j render(partial: 'new_property_form', locals: { prefix: 'join-' }) %>");
+  $(".join-predicate-del-btn").unbind("click");
+  $(".join-predicate-del-btn").bind("click", function() {
+    $(this).closest("div.form-group").remove();
+  });
+});
+
+$(".join-predicate-del-btn").bind("click", function() {
+  $(this).closest("div.form-group").remove();
+});
+
+<% if @object_pbps.property_bridge_property_id == PropertyBridgeProperty.uri_pattern.id || @object_pbps.property_bridge_property_id == PropertyBridgeProperty.uri_column.id %>
+$("#join-object-language-datatype-<%= @property_bridge.id %>").hide();
+<% end %>
+
+$("#join-object-format-selector").change(function() {
+  var selected = $("#join-object-format-selector option:selected").val();
+
+  $("#join-object-uri-pattern-<%= @property_bridge.id %>").hide();
+  $("#join-object-uri-column-<%= @property_bridge.id %>").hide();
+  $("#join-object-literal-pattern-<%= @property_bridge.id %>").hide();
+  $("#join-object-literal-column-<%= @property_bridge.id %>").hide();
+
+  if (selected == "<%= PropertyBridgeProperty.uri_pattern.id %>") {
+    $("#join-object-uri-pattern-<%= @property_bridge.id %>").show();
+    $("#join-object-language-datatype-<%= @property_bridge.id %>").hide();
+  } else if (selected == "<%= PropertyBridgeProperty.uri_column.id %>") {
+    $("#join-object-uri-column-<%= @property_bridge.id %>").show();
+    $("#join-object-language-datatype-<%= @property_bridge.id %>").hide();
+  } else if (selected == "<%= PropertyBridgeProperty.literal_pattern.id %>") {
+    $("#join-object-literal-pattern-<%= @property_bridge.id %>").show();
+    $("#join-object-language-datatype-<%= @property_bridge.id %>").show();
+  } else if (selected == "<%= PropertyBridgeProperty.literal_column.id %>") {
+    $("#join-object-literal-column-<%= @property_bridge.id %>").show();
+    $("#join-object-language-datatype-<%= @property_bridge.id %>").show();
+  }
+});
+<% end %>
+
+$("#staticModalJoinMap").draggable({
+  handle: "#join-map-dialog-header"
+});
+$('[data-toggle="tooltip"]').tooltip();
+
+$("#staticModalJoinMap").modal();

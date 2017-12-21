@@ -1,0 +1,22 @@
+<%= form_tag({controller: :mapping, action: :start_mapping}, method: :post, remote: true) do %>
+<table class="work_table" border="1">
+  <tr>
+    <th>Name</th>
+    <td><%= text_field_tag :work_name, "", size: 50 %></td>
+  </tr>
+
+  <tr>
+    <th>Comment</th>
+    <td><%= text_area_tag :work_comment, "", size: "80x3" %></td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <div style="font-weight:bold;">Database connection</div>
+      <%= render 'db_connection' %>
+    </td>
+  </tr>
+</table>
+<%= hidden_field_tag "id", "", id: "target-job-id" %>
+<div style="margin-top:5px;"><%= submit_tag "Go" %></div>
+<% end %>

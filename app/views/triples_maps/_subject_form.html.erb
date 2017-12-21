@@ -1,0 +1,67 @@
+<div class="form-group required subject-group">
+  <label for="subject-type" class="col-sm-2 control-label">Format</label>
+  <div class="col-sm-9">
+    <div class="radio">
+      <% @subject_format_properties[0 .. 1].each do |class_map_property| %>
+	<label>
+	  <%= radio_button_tag("class_map_property_setting[#{@class_map_property_setting[:subject].id}][class_map_property_id]",
+			       class_map_property.id,
+			       @class_map_property_setting[:subject].class_map_property_id == class_map_property.id,
+			       class: 'subject-uri-format') %>
+	  <%= class_map_property.label %>
+	</label>
+      <% end %>
+    </div>
+  </div>
+  <%= render partial: 'tooltip_icon', locals: { title: %Q|[Required]<br /> * URI pattern: Construct a subject URI starting with http://〜 or namespace:〜 (the namespace name must be registered in the &quot;Namespaces&quot; setting).<br /> * URI column: Treat values of a specified column as subject URIs (Use only if cell values of a specified column are already stored as URIs).<br /> * Constant URI: Use a constant URI as a subject URI used for all rows in this table (Use only if you know what you are doing).| } %>
+</div>
+
+<div class="form-group required">
+  <label for="subject-uri-pattern" class="col-sm-2 control-label">URI</label>
+  <div id="subject-expression" class="col-sm-9">
+    <%= render 'subject_uri_pattern' %>
+    <%= render 'subject_uri_column' %>
+    <%#= render 'subject_constant_value' %>
+  </div>
+  <%= render partial: 'tooltip_icon', locals: { title: %Q|* URI pattern: [Required] Specify a template URI using a special variable @@table_name.column_name@@ (combination of a table name and a column name to take a cell's value).<br />* URI column: [Required] Specify a column containing subject URIs.<br />* Constant value: [Required] Specify a constant URI as a subject URI for all rows in this table.| } %>
+</div>
+
+<% unless @class_map.for_join? %>
+<%# == rdf:type == %>
+<div id="subject-rdf-type-wrapper">
+  <% @class_map_property_setting[:rdf_type].each_with_index do |rdf_type_cmps, i| %>
+    <%= render(partial: "subject_rdf_type_form",
+	       locals: { rdf_type_cmps: rdf_type_cmps, base_uri: @base_uri, first: i == 0 }) %>
+  <% end %>
+</div>
+
+<%# == rdfs:label, language == %>
+<% if @resource_label[:object] %>
+<div class="form-group" id="resource-label-object_<%= @resource_label[:object].id %>">
+  <span class="required"><label for="resource-label_<%= @resource_label_property_bridge.id %>" class="col-sm-2 control-label">rdfs:label</label></span>
+  <div class="col-sm-6">
+    <%= text_field_tag("property_bridge_property_setting[#{@resource_label[:object].id}][value]",
+                       @resource_label[:object].value,
+                       id: "resource-label-object_#{@resource_label[:object].id}", class: "form-control input-sm") %>
+  </div>
+
+  <label for="resource-label-lang_<%= @resource_label[:lang].id %>" class="col-sm-2 control-label">Language</label>
+  <div class="col-sm-1">
+    <%= text_field_tag("property_bridge_property_setting[#{@resource_label[:lang].id}][value]",
+		       @resource_label[:lang].value,
+		       id: "resource-label-lang_#{@resource_label[:lang].id}", class: "form-control input-sm") %>
+  </div>
+</div>
+<% end %>
+
+<%# == WHERE condition == %>
+<div class="form-group">
+  <label for="subject-where-condition" class="col-sm-2 control-label">WHERE condition</label>
+  <div class="col-sm-9">
+    <%= text_field_tag("class_map_property_setting[#{@class_map_property_setting[:condition].id}][value]",
+		       @class_map_property_setting[:condition].value,
+		       id: "subject-where-condition", class: "form-control") %>
+  </div>
+  <%= render partial: 'tooltip_icon', locals: { title: %Q|Specifies an SQL WHERE condition. RDF triples will only be generated for database rows that satisfy the condition.| } %>
+</div>
+<% end %>
