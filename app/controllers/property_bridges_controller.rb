@@ -77,7 +77,7 @@ class PropertyBridgesController < ApplicationController
     
     ActiveRecord::Base.transaction do
       @work = Work.find(@property_bridge.work_id)
-
+      
       delete_predicates(@property_bridge.id)
       add_predicates
 
@@ -113,7 +113,7 @@ class PropertyBridgesController < ApplicationController
 
   def set_instance_variables
     @predicate_pbps = @property_bridge.predicate
-    @object_pbps = @property_bridge.object.first
+    @object_pbps = @property_bridge.objects.first
     @lang_pbps = @property_bridge.pbps_for_lang
     @datatype_pbps = @property_bridge.pbps_for_datatype
     @condition_pbps = @property_bridge.pbps_for_condition

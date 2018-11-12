@@ -29,6 +29,7 @@ class PropertyBridgeProperty < ApplicationRecord
   scope :uri_column, -> { where(property: "d2rq:uriColumn").first }
   scope :literal_pattern, -> { where(property: "d2rq:pattern").first }
   scope :literal_column, -> { where(property: "d2rq:column").first }
+  scope :constant_value, ->{ find_by(property: "d2rq:constantValue") }
 
   has_many :property_bridge_property_settings
 
@@ -42,6 +43,11 @@ class PropertyBridgeProperty < ApplicationRecord
     
     def object_properties
       [ uri_pattern, uri_column, literal_pattern, literal_column ]
+    end
+
+
+    def object_pattern_properties
+      [ uri_pattern, literal_pattern ]
     end
 
 

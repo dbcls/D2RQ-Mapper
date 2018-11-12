@@ -1,5 +1,5 @@
 <% prev_column = '' %>
-<ul class="list-group">
+<ul id="predicate-object-contaier" class="list-group">
   <% @property_bridges.each do |property_bridge| %>
     <% next if @property_bridge_property_setting[property_bridge.id].nil? %>
     <%= render partial: 'property_bridge_form',

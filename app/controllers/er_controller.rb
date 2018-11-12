@@ -159,8 +159,6 @@ class ErController < ApplicationController
 
     property_bridge_for_label = @class_map.property_bridge_for_resource_label
     
-    #@cmps_for_resource_identity = @class_map.property_setting_for_resource_identity
-    #@cmps_for_class = @class_map.property_settings_for_class
     @subject_cmps = @class_map.property_setting_for_resource_identity
     @rdf_type_cmps = @class_map.property_settings_for_class
 
@@ -204,7 +202,7 @@ class ErController < ApplicationController
     validate_user(@work.id)
 
     @predicate_pbps = @property_bridge.predicate
-    @object_pbps = @property_bridge.object.first
+    @object_pbps = @property_bridge.objects.first
     @lang_pbps = @property_bridge.pbps_for_lang
     @datatype_pbps = @property_bridge.pbps_for_datatype
     @condition_pbps = @property_bridge.pbps_for_condition
@@ -334,7 +332,7 @@ class ErController < ApplicationController
 
   def server_load
     work = Work.find(params[:id])
-    
+
     require 'togo_mapper/er/xml_generator'
     xml_generator = TogoMapper::ER::XmlGenerator.new(work)
     render xml: xml_generator.generate

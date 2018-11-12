@@ -1,8 +1,14 @@
-<% if defined?(bnode) %>
-<% column_name = "Blank node: #{bnode.label}" %>
-<% else %>
-<% column_name = @class_map_type == 'T' ? property_bridge.real_column_name : "" %>
-<% end %>
+<%
+  if defined?(bnode)
+    column_name = "Blank node: #{bnode.label}"
+  else
+    if property_bridge.property_bridge_type_id == 4
+      column_name = '[Column independent predicate, object]'
+    else
+      column_name = @class_map_type == 'T' ? property_bridge.real_column_name : ""
+    end
+  end
+%>
 
 <div class="checkbox">
   <a data-toggle="collapse" href="#collapse<%= property_bridge.id %>" aria-expanded="false" aria-controls="collapse<%= property_bridge.id %>">

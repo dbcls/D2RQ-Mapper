@@ -37,6 +37,14 @@ class ClassMap < ApplicationRecord
     def for_er(work_id)
       ClassMap.where(work_id: work_id, table_join_id: nil, bnode_id: nil).order(:id)
     end
+
+    def id_by_table_name(work_id, table_name)
+      return nil if table_name.blank?
+
+      class_map = find_by(work_id: work_id, table_name: table_name)
+
+      class_map.nil? ? nil : class_map.id
+    end
   end
 
   
@@ -75,6 +83,11 @@ class ClassMap < ApplicationRecord
   end
 
 
+  def property_bridges_for_constant
+    PropertyBridge.where(class_map_id: id, property_bridge_type_id: PropertyBridgeType.constant.id)
+  end
+
+
   def property_bridge_for_resource_label
     property_bridge = PropertyBridge.where(
       class_map_id: self.id,
@@ -84,7 +97,7 @@ class ClassMap < ApplicationRecord
     if property_bridge
       condition = {
         property_bridge_id: property_bridge.id,
-        property_bridge_property_id: PropertyBridgeProperty.property,
+        property_bridge_property_id: PropertyBridgeProperty.property.id,
         value: "rdfs:label"
       }
       if PropertyBridgePropertySetting.exists?(condition)

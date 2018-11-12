@@ -180,7 +180,7 @@ class WorksController < ApplicationController
 
 
   def work_params
-    params.require(:work).permit(:name, :comment, :user_id, :base_uri, :license_id, :license)
+    params.require(:work).permit(:name, :comment, :user_id, :base_uri, :licence_subject_uri, :license_id, :license)
   end
 
 

@@ -11,7 +11,7 @@ module TogoMapper::D2RQ::Bnode
 
       blank_node = BlankNode.create!(
           work_id: @work.id,
-          class_map_id: class_map_id,
+          class_map_id: class_map_id || class_map.id,
           property_bridge_id: property_bridge_ids[0],
           property_bridge_ids: property_bridge_ids.join(',')
       )
@@ -74,6 +74,12 @@ module TogoMapper::D2RQ::Bnode
       db_client.columns(class_map.table_name).each do |column_name|
         init_mapping_for_column(bnode_class_map, bnode_class_map.table_name, column_name)
       end
+
+      # Table-ClassMapID Mapping
+      if bnode_class_map
+        TableClassMap.create!(table_id: bnode_class_map.id, class_map_id: bnode_class_map.id)
+      end
+
     end
 
     blank_node

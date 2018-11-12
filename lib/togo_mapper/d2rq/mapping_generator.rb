@@ -565,6 +565,14 @@ class MappingGenerator
 
 
   def dataset_uri
+    if @work.licence_subject_uri.blank?
+      dataset_uri_default
+    else
+      @work.licence_subject_uri
+    end
+  end
+
+  def dataset_uri_default
     database = @db_connection.database
     if @db_connection.adapter == 'sqlite3'
       slash_pos = database.rindex('/')
