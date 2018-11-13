@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  
-  get '/ajax/new_property_bridge_form' => 'triples_maps#new_property_bridge_form'
+
+  get '/ajax/new_constant_predicate_object_form/:id', to: 'triples_maps#new_constant_predicate_object_form'
+  get '/ajax/new_property_bridge_form/:id', to: 'triples_maps#new_property_bridge_form'
   get '/ajax/del_property_bridge_form' => 'triples_maps#del_property_bridge_form'
   get '/ajax/new_predicate_form' => 'triples_maps#new_predicate_form'
 
@@ -131,11 +132,12 @@ Rails.application.routes.draw do
     end
   end
 
+
   # Devise
   resources :password_resets
   devise_for :users,
              path_names: { sign_in: "login", sign_out: "logout" },
              controllers: { omniauth_callbacks: "omniauth_callbacks" }
-  
+
   root 'index#welcome'
 end

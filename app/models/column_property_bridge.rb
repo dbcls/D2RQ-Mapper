@@ -1,0 +1,3 @@
+class ColumnPropertyBridge < ApplicationRecord
+
+end

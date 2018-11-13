@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171017155631) do
+ActiveRecord::Schema.define(version: 20180414092514) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,11 @@ ActiveRecord::Schema.define(version: 20171017155631) do
     t.integer  "er_ypos"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+  end
+
+  create_table "column_property_bridges", force: :cascade do |t|
+    t.integer "column_id"
+    t.integer "property_bridge_id"
   end
 
   create_table "db_connections", force: :cascade do |t|
@@ -124,6 +129,11 @@ ActiveRecord::Schema.define(version: 20171017155631) do
     t.datetime "updated_at",              null: false
   end
 
+  create_table "table_class_maps", force: :cascade do |t|
+    t.integer "table_id"
+    t.integer "class_map_id"
+  end
+
   create_table "table_joins", force: :cascade do |t|
     t.integer  "work_id"
     t.integer  "l_table_class_map_id"
@@ -169,6 +179,7 @@ ActiveRecord::Schema.define(version: 20171017155631) do
     t.string   "uid"
     t.string   "password_reset_token"
     t.datetime "password_reset_sent_at"
+    t.string   "access_token"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
@@ -180,11 +191,12 @@ ActiveRecord::Schema.define(version: 20171017155631) do
     t.string   "base_uri"
     t.integer  "user_id"
     t.text     "er_data"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.datetime "mapping_updated"
     t.integer  "license_id"
     t.text     "license"
+    t.string   "licence_subject_uri"
   end
 
 end

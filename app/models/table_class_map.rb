@@ -1,0 +1,3 @@
+class TableClassMap < ApplicationRecord
+
+end

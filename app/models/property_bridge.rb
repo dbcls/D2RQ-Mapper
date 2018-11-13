@@ -25,6 +25,17 @@ class PropertyBridge < ApplicationRecord
   end
 
 
+  class << self
+    def id_by_column_name(class_map_id, column_name)
+      return nil if column_name.blank?
+
+      property_bridge = order('id').find_by(class_map_id: class_map_id, column_name: column_name)
+
+      property_bridge.nil? ? nil : property_bridge.id
+    end
+  end
+
+
   def predicate
     PropertyBridgePropertySetting.where(
       property_bridge_id: id,
@@ -33,7 +44,7 @@ class PropertyBridge < ApplicationRecord
   end
 
 
-  def object
+  def objects
     PropertyBridgePropertySetting.where(
       property_bridge_id: id,
       property_bridge_property_id: PropertyBridgeProperty.object_properties.map{|p| p.id}
@@ -103,6 +114,10 @@ class PropertyBridge < ApplicationRecord
     property_bridge_type_id == PropertyBridgeType.bnode.id
   end
 
+  def only_pattern?
+    property_bridge_type_id == PropertyBridgeType.constant.id
+  end
+
 
   def has_property?
     property_bridge_property_setting = PropertyBridgePropertySetting.where(
@@ -135,6 +150,8 @@ class PropertyBridge < ApplicationRecord
       else
         name = "label-#{class_map.table_name}"
       end
+    elsif self.only_pattern?
+      name = "pattern-#{self.id}"
     end
 
     if PropertyBridge.exists?(work_id: self.work_id, map_name: name)
@@ -167,5 +184,5 @@ class PropertyBridge < ApplicationRecord
       column_name
     end
   end
-  
+
 end

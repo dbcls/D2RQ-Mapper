@@ -69,6 +69,19 @@ var bind_del_subject_rdf_type_btn = function() {
   });
 };
 
+var bind_add_predicate_object_btn = function() {
+    $("#add-po-btn").bind("click", function() {
+        $.get("/ajax/new_constant_predicate_object_form/<%= @class_map.id %>", function(html) {
+            var li = $("#predicate-object-contaier").children().filter(':last');
+            $(li).after(html);
+            $('.collapse').collapse();
+            bind_rdf_btn();
+            bind_del_property_bridge_btn();
+            bind_add_predicate_btn();
+        });
+    });
+};
+
 var bind_rdf_btn = function() {
   $(".btn-rdf").unbind("click");
   $(".btn-rdf").bind("click", function() {
@@ -96,7 +109,7 @@ var bind_add_property_bridge_btn = function() {
     var li = $(this).closest("li");
     var property_bridge_id = li.attr("data-pbid");
     
-    $.get("/ajax/new_property_bridge_form", {class_map_id: "<%= @class_map.id %>", property_bridge_id:  property_bridge_id},
+    $.get("/ajax/new_property_bridge_form/<%= @class_map.id %>", { property_bridge_id: property_bridge_id },
       function(html) {
 	li.after(html);
 	$('.collapse').collapse();
@@ -161,6 +174,7 @@ $(function () {
   bind_subject_uri_format_btn();
   bind_add_subject_rdf_type_btn();
   bind_del_subject_rdf_type_btn();
+  bind_add_predicate_object_btn();
   bind_rdf_btn();
   bind_add_property_bridge_btn();
   bind_del_property_bridge_btn();

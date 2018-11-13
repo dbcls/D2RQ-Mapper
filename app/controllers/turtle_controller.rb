@@ -4,8 +4,6 @@ require 'togo_mapper/d2rq/mapping_generator'
 require 'togo_mapper/d2rq/turtle_generator_job'
 
 class TurtleController < ApplicationController
-  #include ActionController::Live
-
   before_action :authenticate_user!
   before_action :set_html_body_class, only: [ 'show' ]
   before_action :set_work, except: [ 'by_table', 'by_column', 'by_table_join' ]
@@ -81,7 +79,7 @@ class TurtleController < ApplicationController
 
     if params.key?("sse") || params.key?("nosse")
       mapping_generator.database_property = {
-        'resultSizeLimit' => 1
+        'resultSizeLimit' => 5
       }
       mapping_generator.configuration_property = {
         'serveVocabulary' => false
@@ -107,7 +105,6 @@ class TurtleController < ApplicationController
       response.headers['X-Accel-Buffering'] = 'no'
       mode = "sse"
     elsif params.key?("nosse")
-      #response.headers['Content-Type'] = 'text/turtle'
       mode = "nosse"
     else
       response.headers['Content-Type'] = 'text/turtle'
@@ -135,10 +132,6 @@ class TurtleController < ApplicationController
         when "sse"
           response.stream.write "id:#{last_event_id}\n"
           response.stream.write "data:#{line}\n"
-          #if num_lines == D2RQ_DUMPED_TURTLE_LINES
-          #  Process.kill(:INT, thread.pid)
-          #  break
-          #end
         end
       end
     end
@@ -292,8 +285,6 @@ class TurtleController < ApplicationController
     logger.debug e.bactrace.join("\n")
     logger.debug "Stream closed"
   ensure
-    #response.stream.close
-    #stdoe.close if stdoe
   end
 
   private

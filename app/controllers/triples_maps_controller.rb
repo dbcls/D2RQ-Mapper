@@ -1,4 +1,3 @@
-require 'pp'
 require 'togo_mapper/mapping'
 require 'togo_mapper/namespace'
 require 'togo_mapper/d2rq'
@@ -10,6 +9,8 @@ class TriplesMapsController < ApplicationController
 
   protect_from_forgery except: [:update]
   before_action :authenticate_user!, :set_html_body_class
+  before_action :set_class_map, only: [ :show, :update, :new_constant_predicate_object_form, :new_property_bridge_form ]
+  before_action :set_property_bridge, only: [ :new_property_bridge_form, :del_property_bridge_form ]
 
   def index
   end
@@ -29,13 +30,13 @@ class TriplesMapsController < ApplicationController
 
   def show
     @table_not_found = false
-    
-    @class_map = ClassMap.find(params[:id])
+
     validate_user(@class_map.work_id)
 
+    # Check if I connect to the database
     begin
       db_conn = DbConnection.where(work_id: @class_map.work_id).first
-      db = TogoMapper::DB.new(db_conn.connection_config)
+      TogoMapper::DB.new(db_conn.connection_config)
     rescue => e
       flash[:error] = e.message.force_encoding("UTF-8")
       redirect_to menu_path(@class_map.work_id)
@@ -44,7 +45,10 @@ class TriplesMapsController < ApplicationController
     
     begin
       @work = @class_map.work
+
+      # Synchronize database schema and mapping settings
       maintain_consistency_with_rdb
+
       if !@class_map.table_name.blank? && !@work.table_exists?(@class_map.table_name)
         @table_not_found = true
         @grouped_triples_maps = options_for_table_selector(@class_map)
@@ -62,7 +66,6 @@ class TriplesMapsController < ApplicationController
 
 
   def update
-    @class_map = ClassMap.find(params[:id])
     validate_user(@class_map.work_id)
 
     errors = validate_posted_values
@@ -108,28 +111,47 @@ class TriplesMapsController < ApplicationController
 
 
   def new_property_bridge_form
-    @class_map = ClassMap.find(params[:class_map_id])
     validate_user(@class_map.work.id)
-    
-    @property_bridge = PropertyBridge.find(params[:property_bridge_id])
 
+    property_bridge = create_property_bridge
+    pbps_hash = new_pbps_hash(property_bridge.id)
     set_instance_variables(@class_map)
     set_models_by_rdb
 
-    render 'new_property_bridge_form', layout: false
+    render partial: 'property_bridge_form_for_add',
+           locals: { property_bridge: property_bridge,
+                     property_bridge_property_setting: pbps_hash }
+  end
+
+
+  def new_constant_predicate_object_form
+    validate_user(@class_map.work.id)
+
+    property_bridge = create_property_bridge_for_constant
+    pbps_hash = new_pbps_hash(property_bridge.id)
+    set_instance_variables(@class_map)
+    set_models_by_rdb
+
+    render partial: 'property_bridge_form_for_add',
+           locals: { property_bridge: property_bridge,
+                     property_bridge_property_setting: pbps_hash }
   end
 
 
   def del_property_bridge_form
-    property_bridge = PropertyBridge.find(params[:property_bridge_id])
-    validate_user(property_bridge.work.id)
+    validate_user(@property_bridge.work.id)
     
     ActiveRecord::Base.transaction do
-      PropertyBridgePropertySetting.destroy_all(property_bridge_id: property_bridge.id)
-      PropertyBridge.destroy(property_bridge.id)
+      PropertyBridgePropertySetting.destroy_all(property_bridge_id: @property_bridge.id)
+
+      ColumnPropertyBridge.where(property_bridge_id: @property_bridge.id).each do |cpb|
+        cpb.destroy!
+      end
+
+      PropertyBridge.destroy(@property_bridge.id)
     end
 
-    render nothing: true
+    head :ok
   end
 
 
@@ -138,6 +160,14 @@ class TriplesMapsController < ApplicationController
   end
 
   private
+
+  def set_class_map
+    @class_map = ClassMap.find(params[:id])
+  end
+
+  def set_property_bridge
+    @property_bridge = PropertyBridge.find(params[:property_bridge_id])
+  end
 
   def set_instance_variables(class_map)
     @work = Work.find(class_map.work_id)
@@ -276,6 +306,7 @@ class TriplesMapsController < ApplicationController
     # Predicate & Object (PropertyBridge, PropertyBridgePropertySetting)
     ignored_ids = []
     @property_bridges = []
+
     PropertyBridge.where(
       work_id: @work.id,
       class_map_id: @class_map.id,
@@ -292,6 +323,12 @@ class TriplesMapsController < ApplicationController
           ignored_ids << property_bridge.id
         end
       end
+    end
+    PropertyBridge.where(work_id: @work.id,
+                         class_map_id: @class_map.id,
+                         property_bridge_type_id: PropertyBridgeType.constant.id).order(:id).each do |property_bridge|
+      @property_bridges << property_bridge
+      ignored_ids << property_bridge.id
     end
 
     @object_value = {}
@@ -563,7 +600,11 @@ class TriplesMapsController < ApplicationController
     if @class_map.for_join?
       property_bridges = []
     else
-      property_bridges = @class_map.property_bridges_for_column + @class_map.property_bridges_for_bnode
+      property_bridges =
+          @class_map.property_bridges_for_column +
+              @class_map.property_bridges_for_bnode +
+                @class_map.property_bridges_for_constant
+
     end
     property_bridges.each do |property_bridge|
       PropertyBridgePropertySetting.where(
@@ -696,7 +737,7 @@ class TriplesMapsController < ApplicationController
         end
       end
     end
-    
+
     errors
   end
 
@@ -724,7 +765,11 @@ class TriplesMapsController < ApplicationController
 
 
   def object_property_bridge_properties
-    PropertyBridgeProperty.object_properties
+    if @property_bridge.present? && @property_bridge.only_pattern?
+      PropertyBridgeProperty.object_pattern_properties
+    else
+      PropertyBridgeProperty.object_properties
+    end
   end
 
 
@@ -773,6 +818,101 @@ class TriplesMapsController < ApplicationController
       deleted_keys = []
     end
     db_client.close
+  end
+
+
+  def create_property_bridge
+    property_bridge = PropertyBridge.create!(
+        work_id: @property_bridge.work_id,
+        class_map_id: @class_map.id,
+        column_name: @property_bridge.column_name,
+        enable: true,
+        property_bridge_type_id: @property_bridge.property_bridge_type_id
+    )
+
+    ColumnPropertyBridge.create!(
+        column_id: @property_bridge.id,
+        property_bridge_id: property_bridge.id
+    )
+
+    # PropertyBridgePropertySetting for d2rq:belongsToClassMap
+    PropertyBridgePropertySetting.create!(
+        property_bridge_id: property_bridge.id,
+        property_bridge_property_id: PropertyBridgeProperty.by_property('belongsToClassMap').id,
+        value: @class_map.map_name
+    )
+
+    property_bridge
+  end
+
+
+  def new_pbps_hash(property_bridge_id)
+    property_bridge = PropertyBridge.find(property_bridge_id)
+
+    predicate = PropertyBridgePropertySetting.create!(
+        property_bridge_id: property_bridge_id,
+        property_bridge_property_id: PropertyBridgeProperty.by_property('property').id
+    )
+
+    if property_bridge.only_pattern?
+      property_bridge_property_id = PropertyBridgeProperty.literal_pattern.id
+    else
+      property_bridge_property_id = PropertyBridgeProperty.literal_column.id
+    end
+    object = PropertyBridgePropertySetting.create!(
+        property_bridge_id: property_bridge_id,
+        property_bridge_property_id: property_bridge_property_id,
+        value: ''
+    )
+
+    language = PropertyBridgePropertySetting.create!(
+        property_bridge_id: property_bridge_id,
+        property_bridge_property_id:PropertyBridgeProperty.lang.id,
+        value: ''
+    )
+
+    datatype = PropertyBridgePropertySetting.create!(
+        property_bridge_id: property_bridge_id,
+        property_bridge_property_id: PropertyBridgeProperty.datatype.id,
+        value: ''
+    )
+
+    condition = PropertyBridgePropertySetting.create!(
+        property_bridge_id: property_bridge_id,
+        property_bridge_property_id: PropertyBridgeProperty.condition.id,
+        value: ''
+    )
+
+    {
+        predicates: [ predicate ],
+        object: object,
+        language: language,
+        datatype: datatype,
+        condition: condition
+    }
+  end
+
+
+  def create_property_bridge_for_constant
+    property_bridge = PropertyBridge.create!(
+        work_id: @class_map.work.id,
+        class_map_id: @class_map.id,
+        property_bridge_type_id: PropertyBridgeType.constant.id,
+        user_defined: false,
+        enable: true
+    )
+    property_bridge.column_name = "column#{property_bridge.id}"
+    property_bridge.map_name = property_bridge.generate_map_name
+    property_bridge.save!
+
+    # PropertyBridgePropertySetting for d2rq:belongsToClassMap
+    PropertyBridgePropertySetting.create!(
+        property_bridge_id: property_bridge.id,
+        property_bridge_property_id: PropertyBridgeProperty.by_property('belongsToClassMap').id,
+        value: @class_map.map_name
+    )
+
+    property_bridge
   end
 
   

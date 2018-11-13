@@ -18,11 +18,20 @@ module Mapping
   def init_mapping_for_table(table_name, columns)
     default_class_map_property = ClassMapProperty.default_property
 
+    source_cm = ClassMap.find_by(work_id: @work.id, table_name: table_name)
+
     class_map = ClassMap.create!(
       work_id: @work.id,
       table_name: table_name,
       enable: true
     )
+
+    # Table-ClassMapID Mapping
+    if source_cm
+      TableClassMap.create!(table_id: source_cm.id, class_map_id: class_map.id)
+    else
+      TableClassMap.create!(table_id: class_map.id, class_map_id: class_map.id)
+    end
 
     # Method to generate subject URI (URI pattern, URI column, Constant URI)
     ClassMapPropertySetting.create!(
@@ -50,13 +59,21 @@ module Mapping
   end
 
 
-  def init_mapping_for_column(class_map, table_name, column)
+  def init_mapping_for_column(class_map, table_name, column, value = {})
     property_bridge_type_for_column = PropertyBridgeType.column
-    default_property_bridge_predicate_property = PropertyBridgeProperty.predicate_default
     default_property_bridge_object_property = PropertyBridgeProperty.object_default
+
+    source_property_bridge = PropertyBridge.find_by(class_map_id: class_map.id, column_name: column)
 
     # Property Bridge
     property_bridge = create_property_bridge(@work.id, class_map.id, table_name, column, property_bridge_type_for_column.id)
+
+    # Column-PropertyBridgeID Mapping
+    if source_property_bridge
+      ColumnPropertyBridge.create!(column_id: source_property_bridge.id, property_bridge_id: property_bridge.id)
+    else
+      ColumnPropertyBridge.create!(column_id: property_bridge.id, property_bridge_id: property_bridge.id)
+    end
 
     # Relation of ClassMap
     PropertyBridgePropertySetting.create!(
@@ -65,32 +82,52 @@ module Mapping
       value: class_map.map_name
     )
     
-    # Predicate
-    PropertyBridgePropertySetting.create!(
-      property_bridge_id: property_bridge.id,
-      property_bridge_property_id: default_property_bridge_predicate_property.id,
-      value: default_predicate_uri(table_name, column)
-    )
+    # Predicates
+    if value.key?(:predicates)
+      predicates = value[:predicates]
+    else
+      predicates = [
+          { 'value' => default_predicate_uri(table_name, column) }
+      ]
+    end
+    predicates.each do |predicate|
+      PropertyBridgePropertySetting.create!(
+          property_bridge_id: property_bridge.id,
+          property_bridge_property_id: PropertyBridgeProperty.property.id,
+          value: predicate['value']
+      )
+    end
 
     # Object
+    object = value.key?(:object) ? value[:object] : default_property_bridge_property_value(table_name, column)
     PropertyBridgePropertySetting.create!(
       property_bridge_id: property_bridge.id,
       property_bridge_property_id: default_property_bridge_object_property.id,
-      value: default_property_bridge_property_value(table_name, column)
+      value: object
     )
 
     # Language
+    language = value.key?(:language) ? value[:language] : ''
     PropertyBridgePropertySetting.create!(
       property_bridge_id: property_bridge.id,
       property_bridge_property_id: PropertyBridgeProperty.lang.id,
-      value: ""
+      value: language
     )
 
     # Datatype
+    datatype = value.key?(:datatype) ? value[:datatype] : ''
     PropertyBridgePropertySetting.create!(
       property_bridge_id: property_bridge.id,
       property_bridge_property_id: PropertyBridgeProperty.datatype.id,
-      value: ""
+      value: datatype
+    )
+
+    # WHERE condition
+    condition = value.key?(:where_condition) ? value[:where_condition] : ''
+    PropertyBridgePropertySetting.create!(
+        property_bridge_id: property_bridge.id,
+        property_bridge_property_id: PropertyBridgeProperty.condition.id,
+        value: condition
     )
 
     property_bridge
@@ -184,14 +221,14 @@ module Mapping
     db_conn = DbConnection.where(work_id: @work.id).first
     db = TogoMapper::DB.new(db_conn.connection_config)
     tables = db.tables
-    class_maps = @work.class_maps
 
     @work.class_maps.each do |class_map|
-      unless class_map.table_name.blank?
+      if class_map.table_name.present?
         if tables.include?(class_map.table_name)
           columns = db.columns(class_map.table_name)
           class_map.property_bridges.each do |property_bridge|
-            if !property_bridge.column_name.blank? && !columns.include?(property_bridge.column_name)
+            next if property_bridge.only_pattern?
+            if property_bridge.column_name.present? && !columns.include?(property_bridge.column_name)
               deleted_property_bridges << property_bridge
             end
           end
