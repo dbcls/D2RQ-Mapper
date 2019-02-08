@@ -5,7 +5,11 @@ else
 end %>
 
 $("#d2rq-turtle-submit-btn-wrapper").html("<%== j button_area %>");
-<% if @turtle_is_latest %>
+<% if @generation.status == 'SUCCESS' %>
+  <% if @turtle_is_latest %>
 $("#d2rq-info-message").html("<%== j(render partial: 'info_message', locals: { message: "The #{g_or_u} of the turtle file has ended." }) %>");
-$("#d2rq-info-message").show();
+  <% end %>
+<% elsif @generation.status == 'ERROR' %>
+$("#d2rq-info-message").html("<%== j(render partial: 'alert_message', locals: { message: @generation.error_message }) %>");
 <% end %>
+$("#d2rq-info-message").show();
