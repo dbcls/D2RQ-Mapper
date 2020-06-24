@@ -1,6 +1,6 @@
-require 'togo_mapper/mapping'
-require 'togo_mapper/d2rq'
-require 'togo_mapper/d2rq/bnode'
+require_dependency 'togo_mapper/mapping'
+require_dependency 'togo_mapper/d2rq'
+require_dependency 'togo_mapper/d2rq/bnode'
 
 class BlankNodesController < ApplicationController
   include TogoMapper::D2RQ::Bnode

@@ -803,7 +803,12 @@ class TriplesMapsController < ApplicationController
     end
 
     db_client = TogoMapper::DB.new(@db_connection.connection_config)
-    @records = db_client.records(table, 0, EXAMPLE_RECORDS_MAX_ROWS)
+    begin
+      @records = db_client.records(table, 0, EXAMPLE_RECORDS_MAX_ROWS)
+    rescue
+      @records = []
+    end
+
     deleted_keys = []
     @records.each_with_index do |record, i|
       record.each do |k, v|
