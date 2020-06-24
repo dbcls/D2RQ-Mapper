@@ -1,7 +1,6 @@
 require 'togo_mapper'
 
-SECURE = ""
-CIPHER = ""
+class D2rqMapper::Error < StandardError; end
 
 EXAMPLE_RECORDS_MAX_ROWS = 5
 
@@ -12,6 +11,11 @@ D2RQ_DUMPED_TURTLE_LINES = 100
 rails_root = ENV['RAILS_ROOT'] || File.dirname(__FILE__) + '/../..'
 rails_env = ENV['RAILS_ENV'] || 'development'
 config = YAML.load_file(rails_root + '/config/d2rq-mapper.yml')
+unless FileTest.directory?(config['d2rq_path'])
+  STDERR.puts 'ERROR: D2RQ directory not found. Please check config/d2rq-mapper.yml'
+  exit
+end
+
 TogoMapper.d2rq_path = config['d2rq_path']
 
 RESOURCE_CLASSES = {

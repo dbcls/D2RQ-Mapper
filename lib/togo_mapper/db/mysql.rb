@@ -14,8 +14,8 @@ class Mysql < TogoMapper::DB::Common
 
 
   def tables
-    query = "SELECT table_name FROM information_schema.tables WHERE table_schema='#{escape(@database)}'"
-    @client.query(query).map{ |row| row["table_name"] }
+    query = "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema='#{escape(@database)}'"
+    @client.query(query).map{ |row| row["TABLE_NAME"] }
   end
 
 

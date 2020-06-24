@@ -20,22 +20,34 @@ class TurtleController < ApplicationController
 
 
   def generate
-    @turtle_exist = File.exist?(turtle_file_path)
+    error = nil
+    begin
+      if Resque.workers.empty?
+        error = 'Resque worker is not started. Please start resque worker.'
+      end
+    rescue => e
+      error = e.message
+    end
 
-    generation = TurtleGeneration.create!(
-        work_id: @work.id,
-        status: 'WAITING'
-    )
-    Resque.enqueue(TogoMapper::D2RQ::TurtleGeneratorJob,
-                   @work.id,
-                   "#{Rails.root}/data/turtle", "#{Rails.root}/data/tmp", generation.id)
+    if error.nil?
+       generation = TurtleGeneration.create!({ work_id: @work.id, status: 'WAITING' })
+       @turtle_exist = File.exist?(turtle_file_path)
+       Resque.enqueue(TogoMapper::D2RQ::TurtleGeneratorJob,
+                      @work.id,
+                      "#{Rails.root}/data/turtle", "#{Rails.root}/data/tmp", generation.id)
+    else
+      generation = TurtleGeneration.create!(
+        work_id: @work.id, status: 'ERROR', end_date: Time.now,
+        error_message: error
+      )
+    end
   end
 
 
   def generation_status
     generation = TurtleGeneration.where(work_id: @work.id).order('id desc').first
     if generation
-      render json: JSON.generate({ status: generation.status })
+      render json: JSON.generate({ status: generation.status, message: generation.error_message })
     else
       render json: JSON.generate({ status: 'NO GENERATION' })
     end
@@ -43,6 +55,7 @@ class TurtleController < ApplicationController
 
 
   def refresh_button_area
+    @generation = TurtleGeneration.where(work_id: @work.id).order('id desc').first
     @turtle_exist = File.exist?(turtle_file_path)
     @turtle_is_latest = latest_turtle_file?
     @first_turtle_generation = TurtleGeneration.where(work_id: @work.id, status: 'SUCCESS').count < 2

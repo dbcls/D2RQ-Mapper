@@ -18,7 +18,10 @@
             $.getScript("<%= refresh_button_area_turtle_path(@work) %>");
             $("#d2rq-turtle-submit-btn-wrapper").show();
             clearInterval(generation_handler);
-        } else if (status == 'ERR0R') {
+        } else if (status == 'ERROR') {
+            $("#d2rq-turtle-message").hide();
+            $.getScript("<%= refresh_button_area_turtle_path(@work) %>");
+            $("#d2rq-turtle-submit-btn-wrapper").show();
             clearInterval(generation_handler);
         } else {
         }

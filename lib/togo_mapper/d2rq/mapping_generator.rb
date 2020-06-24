@@ -235,6 +235,14 @@ class MappingGenerator
       )
     end
 
+    if @db_connection.adapter == "mysql2"
+      writer << RDF::Statement(
+          s,
+          RDF::URI("#{PREFIXES[:jdbc]}characterEncoding"),
+          RDF::Literal("latin1")
+      )
+    end
+
     unless @db_connection.adapter == "sqlite3"
       writer << RDF::Statement(
         s,

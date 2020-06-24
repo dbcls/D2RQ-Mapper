@@ -17,14 +17,12 @@ class DbConnection < ApplicationRecord
 
   
   def encrypt(password)
-    crypt = ActiveSupport::MessageEncryptor.new(SECURE, cipher: CIPHER)
-    crypt.encrypt_and_sign(password)
+    message_encryptor.encrypt_and_sign(password)
   end
 
   
   def decrypt(password)
-    crypt = ActiveSupport::MessageEncryptor.new(SECURE, cipher: CIPHER)
-    crypt.decrypt_and_verify(password)
+    message_encryptor.decrypt_and_verify(password)
   end
 
   
@@ -42,6 +40,17 @@ class DbConnection < ApplicationRecord
       username: self.username,
       password: self.decrypt_password
     }
+  end
+
+  private
+
+  def message_encryptor
+    cipher = Rails.application.secrets.enc_cipher
+    key = Rails.application.secrets.enc_key
+    if key.is_a?(Array)
+      key = key.pack("H*")
+    end
+    ActiveSupport::MessageEncryptor.new(key, cipher: cipher)
   end
 
 end
