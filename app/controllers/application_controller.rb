@@ -88,7 +88,7 @@ class ApplicationController < ActionController::Base
   
 
   def invalid_access
-    render text: "You don't have permission to access this page.", status: :bad_request
+    render plain: "You don't have permission to access this page.", status: :bad_request
   end
 
   

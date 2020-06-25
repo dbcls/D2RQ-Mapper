@@ -91,16 +91,20 @@ module TogoMapper::D2RQ::Bnode
       bnode_class_map = ClassMap.where(bnode_id: blank_node.id).first
       bnode_property_bridge = PropertyBridge.where(bnode_id: blank_node.id).first
 
-      PropertyBridge.where(class_map_id: bnode_class_map.id).each do |property_bridge|
-        PropertyBridgePropertySetting.destroy_all(property_bridge_id: property_bridge.id)
-        property_bridge.destroy
+      unless bnode_class_map.nil?
+        PropertyBridge.where(class_map_id: bnode_class_map.id).each do |property_bridge|
+          PropertyBridgePropertySetting.where(property_bridge_id: property_bridge.id).destroy_all
+          property_bridge.destroy
+        end
       end
 
-      PropertyBridgePropertySetting.destroy_all(property_bridge_id: bnode_property_bridge.id)
-      ClassMapPropertySetting.destroy_all(class_map_id: bnode_class_map.id)
+      unless bnode_property_bridge.nil?
+        PropertyBridgePropertySetting.where(property_bridge_id: bnode_property_bridge.id).destroy_all
+      end
+      ClassMapPropertySetting.where(class_map_id: bnode_class_map.id).destroy_all
 
-      bnode_property_bridge.destroy
-      bnode_class_map.destroy
+      bnode_property_bridge.destroy unless bnode_property_bridge.nil?
+      bnode_class_map.destroy unless bnode_class_map.nil?
       blank_node.destroy
     end
   end

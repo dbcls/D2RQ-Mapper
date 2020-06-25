@@ -29,7 +29,7 @@ class WorksController < ApplicationController
     rescue => e
       logger.fatal e.inspect
       logger.fatal e.backtrace.join("\n")
-      err_msg = e.message.force_encoding("UTF-8")
+      err_msg = e.message.dup.force_encoding("UTF-8")
       err_msg = err_msg.scrub('?')
       flash.now[:err] = err_msg
       @work = Work.new(work_params)
