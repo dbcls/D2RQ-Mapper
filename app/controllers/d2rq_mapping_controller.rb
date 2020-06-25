@@ -17,7 +17,7 @@ class D2rqMappingController < ApplicationController
     else
       respond_to do |format|
         format.html { render layout: 'graph' }
-        format.ttl { render text: @mapping_data, content_type: 'text/plain' }
+        format.ttl { render plain: @mapping_data, content_type: 'text/plain' }
       end
     end
   end
@@ -50,7 +50,7 @@ class D2rqMappingController < ApplicationController
       set_headers_for_cross_domain
       response_json
     else
-      render text: @mapping_data, content_type: 'text/plain'
+      render plain: @mapping_data, content_type: 'text/plain'
     end
   end
 
@@ -72,7 +72,7 @@ class D2rqMappingController < ApplicationController
         response_js
       end
     else
-      render text: @mapping_data, content_type: 'text/plain'
+      render plain: @mapping_data, content_type: 'text/plain'
     end
   end
 
@@ -85,7 +85,7 @@ class D2rqMappingController < ApplicationController
     mapping_generator.prepare_by_table_join(table_join)
     @mapping_data = mapping_generator.generate_by_table_join
 
-    render text: @mapping_data, content_type: 'text/plain'
+    render plain: @mapping_data, content_type: 'text/plain'
   end
 
   private

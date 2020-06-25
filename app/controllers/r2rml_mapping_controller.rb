@@ -17,7 +17,7 @@ class R2rmlMappingController < ApplicationController
     else
       respond_to do |format|
         format.html { render layout: 'graph' }
-        format.ttl  { render text: @mapping_data, content_type: 'text/plain' }
+        format.ttl  { render plain: @mapping_data, content_type: 'text/plain' }
       end
     end
   end

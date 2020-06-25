@@ -28,7 +28,7 @@ class NamespacesController < ApplicationController
       notice_message = "#{notice_message}<br /><br />#{success_message}"
       ActiveRecord::Base.transaction do
         @work = Work.find(work_id)
-        NamespaceSetting.destroy_all(work_id: work_id)
+        NamespaceSetting.where(work_id: work_id).destroy_all
         
         params[:prefix].zip(params[:uri]).each do |ns|
           namespace = Namespace.where(prefix: ns[0], uri: ns[1]).first

@@ -5,10 +5,10 @@ class DbConnection < ApplicationRecord
   before_save :encrypt_password
 
   validates :adapter, presence: true
-  validates :host, presence: { unless: "adapter == 'sqlite3'" }
-  validates :port, numericality: { only_integer: true, unless: "adapter == 'sqlite3'" }
+  validates :host, presence: { unless: -> { adapter == 'sqlite3' } }
+  validates :port, numericality: { only_integer: true, unless: -> { adapter == 'sqlite3' } }
   validates :database, presence: true
-  validates :username, presence: { unless: "adapter == 'sqlite3'" }
+  validates :username, presence: { unless: -> { adapter == 'sqlite3' } }
 
   
   def encrypt_password

@@ -171,7 +171,7 @@ class TurtleController < ApplicationController
 
     db = TogoMapper::DB.new(db_conn.connection_config)
     if !class_map.table_name.blank? && !db.tables.include?(class_map.table_name)
-      render text: "Table #{class_map.table_name} not found in database.", content_type: 'text/plain'
+      render plain: "Table #{class_map.table_name} not found in database.", content_type: 'text/plain'
       return
     end
 
@@ -210,7 +210,7 @@ class TurtleController < ApplicationController
     db = TogoMapper::DB.new(db_conn.connection_config)
     table_name = property_bridge.class_map.table_name
     if !property_bridge.column_name.blank? && !db.columns(table_name).include?(property_bridge.column_name)
-      render text: "Column #{property_bridge.column_name} not found in table #{table_name}.", content_type: 'text/plain'
+      render plain: "Column #{property_bridge.column_name} not found in table #{table_name}.", content_type: 'text/plain'
       return
     end
     
@@ -259,7 +259,7 @@ class TurtleController < ApplicationController
     }
     cmd = dump_rdf_cmd(path)
 
-    render text: exec_dump_rdf(cmd), content_type: 'text/plain'
+    render plain: exec_dump_rdf(cmd), content_type: 'text/plain'
   end
 
 
@@ -307,9 +307,9 @@ class TurtleController < ApplicationController
     o, e, s = Open3.capture3(cmd)
 
     if (s.success?)
-      render text: o, content_type: 'text/turtle'
+      render plain: o, content_type: 'text/turtle'
     else
-      render text: "The error occurred while generating RDF from D2RQ mapping.\nThe error message is as the following.\n\n#{e}", content_type: 'text/plain'
+      render plain: "The error occurred while generating RDF from D2RQ mapping.\nThe error message is as the following.\n\n#{e}", content_type: 'text/plain'
     end
   end
 

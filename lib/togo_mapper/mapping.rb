@@ -190,23 +190,23 @@ module Mapping
   def delete_work(work_id)
     work = Work.find(work_id)
 
-    DbConnection.destroy_all(work_id: work.id)
+    DbConnection.where(work_id: work.id).destroy_all
 
-    ClassMapPropertySetting.destroy_all(
-      class_map_id: work.class_maps.map(&:id)
-    )
+    ClassMapPropertySetting.where(
+        class_map_id: work.class_maps.map(&:id)
+    ).destroy_all
 
-    PropertyBridgePropertySetting.destroy_all(
-      property_bridge_id: work.property_bridges.map(&:id)
-    )
+    PropertyBridgePropertySetting.where(
+        property_bridge_id: work.property_bridges.map(&:id)
+    ).destroy_all
 
-    TableJoin.destroy_all(work_id: work.id)
+    TableJoin.where(work_id: work.id).destroy_all
 
-    NamespaceSetting.destroy_all(work_id: work.id)
+    NamespaceSetting.where(work_id: work.id).destroy_all
 
-    ClassMap.destroy_all(work_id: work.id)
+    ClassMap.where(work_id: work.id).destroy_all
 
-    PropertyBridge.destroy_all(work_id: work.id)
+    PropertyBridge.where(work_id: work.id).destroy_all
 
     work.destroy
   end

@@ -142,7 +142,7 @@ class TriplesMapsController < ApplicationController
     validate_user(@property_bridge.work.id)
     
     ActiveRecord::Base.transaction do
-      PropertyBridgePropertySetting.destroy_all(property_bridge_id: @property_bridge.id)
+      PropertyBridgePropertySetting.where(property_bridge_id: @property_bridge.id).destroy_all
 
       ColumnPropertyBridge.where(property_bridge_id: @property_bridge.id).each do |cpb|
         cpb.destroy!
